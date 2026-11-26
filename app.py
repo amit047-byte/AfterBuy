@@ -9,22 +9,21 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
+KAGGLE_API_URL = (os.getenv("KAGGLE_API_URL") or "").rstrip("/")
+NGROK_HEADERS = {"ngrok-skip-browser-warning": "true"}
+
 RECEIPTS = []
-
-
-def get_kaggle_url():
-    return (os.getenv("KAGGLE_API_URL") or "").strip().rstrip("/")
 
 
 @app.route("/", methods=["GET"])
 def home():
-    kaggle_url = get_kaggle_url()
     return jsonify({
         "status": "AfterBuy backend running",
-        "kaggle_connected": bool(kaggle_url),
-        "kaggle_url": kaggle_url or None,
+        "kaggle_url": KAGGLE_API_URL or None,
         "endpoints": [
             "POST /parse-receipt  — forward receipt image/text to Kaggle Gemma 3",
+            "POST /draft-email    — draft support email via Kaggle Gemma 3",
+            "POST /chat           — chat with saved receipts via Kaggle Gemma 3",
             "GET  /receipts       — list all saved receipts",
             "POST /receipts       — save a confirmed receipt",
             "DELETE /receipts/<id> — delete a receipt",
@@ -34,38 +33,68 @@ def home():
 
 @app.route("/parse-receipt", methods=["POST"])
 def parse_receipt():
-    kaggle_url = get_kaggle_url()
-    if not kaggle_url:
-        return jsonify({"error": "KAGGLE_API_URL is not set in .env"}), 503
-
-    headers = {"ngrok-skip-browser-warning": "true"}
-    target = f"{kaggle_url}/parse-receipt"
+    if not KAGGLE_API_URL:
+        return jsonify({"error": "KAGGLE_API_URL is not configured in .env"}), 500
 
     try:
         if "file" in request.files:
-            f = request.files["file"]
-            if not f.filename:
+            file = request.files["file"]
+            if file.filename == "":
                 return jsonify({"error": "Empty filename."}), 400
             resp = requests.post(
-                target,
-                files={"file": (f.filename, f.stream, f.mimetype or "application/octet-stream")},
-                headers=headers,
+                f"{KAGGLE_API_URL}/parse-receipt",
+                files={"file": (file.filename, file.stream, file.mimetype or "application/octet-stream")},
+                headers=NGROK_HEADERS,
                 timeout=90,
             )
         else:
             resp = requests.post(
-                target,
+                f"{KAGGLE_API_URL}/parse-receipt",
                 json=request.get_json(silent=True) or {},
-                headers=headers,
+                headers=NGROK_HEADERS,
                 timeout=90,
             )
 
-        data = resp.json()
-        return jsonify(data), resp.status_code
-    except requests.RequestException as e:
-        return jsonify({"error": f"Failed to reach Kaggle API: {e}"}), 502
-    except ValueError:
-        return jsonify({"error": "Invalid JSON returned from Kaggle API."}), 502
+        if resp.status_code >= 400:
+            return jsonify({"error": f"Kaggle API returned {resp.status_code}", "detail": resp.text[:300]}), resp.status_code
+
+        return jsonify(resp.json())
+    except requests.exceptions.Timeout:
+        return jsonify({"error": "Kaggle Gemma 3 request timed out."}), 504
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/draft-email", methods=["POST"])
+def draft_email():
+    if not KAGGLE_API_URL:
+        return jsonify({"error": "KAGGLE_API_URL is not configured in .env"}), 500
+    try:
+        resp = requests.post(
+            f"{KAGGLE_API_URL}/draft-email",
+            json=request.get_json(silent=True) or {},
+            headers=NGROK_HEADERS,
+            timeout=90,
+        )
+        return jsonify(resp.json()), resp.status_code
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/chat", methods=["POST"])
+def chat():
+    if not KAGGLE_API_URL:
+        return jsonify({"error": "KAGGLE_API_URL is not configured in .env"}), 500
+    try:
+        resp = requests.post(
+            f"{KAGGLE_API_URL}/chat",
+            json=request.get_json(silent=True) or {},
+            headers=NGROK_HEADERS,
+            timeout=90,
+        )
+        return jsonify(resp.json()), resp.status_code
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 @app.route("/receipts", methods=["GET"])
@@ -75,7 +104,7 @@ def get_receipts():
 
 @app.route("/receipts", methods=["POST"])
 def save_receipt():
-    body = request.get_json()
+    body = request.get_json(silent=True)
     if not body:
         return jsonify({"error": "Send JSON body with receipt fields."}), 400
 
