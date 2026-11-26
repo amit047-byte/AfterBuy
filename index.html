@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AfterBuy</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light dark;--bg:light-dark(#f3f5fb,#090e1d);--fg:light-dark(#0c1330,#eef1ff);--mut:light-dark(#566083,#97a1c4);--cd:light-dark(#fff,#111933);--bd:light-dark(#dfe4f2,#222c4f);--ac:light-dark(#2543ff,#7c93ff);--mn:light-dark(#087f5b,#3ddc97);--mns:light-dark(#d3f5e6,#0b2e24);--am:light-dark(#a64b00,#ffb454);--ams:light-dark(#ffe8c7,#33240c);--sf:light-dark(#e9edf8,#0e1530);box-sizing:border-box;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+html{scroll-behavior:smooth;scroll-padding-top:calc(84px + env(safe-area-inset-top,0px))}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:400 16px/1.6 "DM Sans",system-ui,sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:30}
+.bg{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.bg i{position:absolute;border-radius:50%;filter:blur(110px);opacity:light-dark(.5,.32);animation:dr 30s ease-in-out infinite alternate}
+.bg i:nth-child(1){width:620px;height:620px;background:#9db0ff;top:-220px;right:-120px}
+.bg i:nth-child(2){width:520px;height:520px;background:#5fe0b5;top:38%;left:-240px;animation-duration:38s}
+@keyframes dr{to{transform:translate(-70px,80px)}}
+h1,h2,h3,.lg{font-family:"Bricolage Grotesque",system-ui,sans-serif}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;padding:12px 16px}
+.nv{max-width:1120px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 10px 8px 20px;border:1px solid transparent;border-radius:16px;transition:.3s}
+nav.sc .nv{background:color-mix(in srgb,var(--bg) 75%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-color:var(--bd)}
+.lg{display:flex;align-items:center;gap:9px;font-weight:700;font-size:20px;color:var(--fg);text-decoration:none;letter-spacing:-.02em}
+.lg i{width:22px;height:26px;background:var(--ac);border-radius:4px 4px 0 0;-webkit-mask:linear-gradient(135deg,#000 50%,transparent 0) bottom/10px 6px repeat-x,linear-gradient(#000,#000) top/100% calc(100% - 6px) no-repeat;mask:linear-gradient(135deg,#000 50%,transparent 0) bottom/10px 6px repeat-x,linear-gradient(#000,#000) top/100% calc(100% - 6px) no-repeat}
+.ls{display:flex;gap:4px}
+.ls a{color:var(--mut);text-decoration:none;font-size:14px;font-weight:500;padding:8px 14px;border-radius:10px;transition:.2s}
+.ls a:hover{color:var(--fg)}.ls a.on{color:var(--fg);background:var(--sf)}
+.rt{display:flex;gap:8px;align-items:center}
+.ic{width:38px;height:38px;border-radius:10px;border:1px solid var(--bd);background:var(--cd);color:var(--fg);cursor:pointer;font-size:15px}
+.bt{display:inline-block;background:var(--fg);color:var(--bg);text-decoration:none;font:500 14px "DM Sans",sans-serif;padding:12px 22px;border-radius:12px;border:0;cursor:pointer;transition:transform .25s,box-shadow .25s}
+.bt:hover{transform:translateY(-2px);box-shadow:0 10px 26px -10px var(--fg)}
+.bt.o{background:transparent;color:var(--fg);border:1px solid var(--bd)}
+:focus-visible{outline:2px solid var(--ac);outline-offset:3px}
+.w{max-width:1120px;margin:0 auto;padding:100px 24px}
+h1{font-size:clamp(40px,6vw,72px);line-height:1.02;letter-spacing:-.04em;font-weight:700;margin:0}
+h2{font-size:clamp(28px,3.6vw,44px);line-height:1.1;letter-spacing:-.03em;font-weight:700;margin:0 0 14px}
+h3{font-size:19px;font-weight:700;margin:0 0 8px;letter-spacing:-.01em}
+p{margin:0;color:var(--mut)}
+.hero{display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:center;padding-top:72px}
+.hero p.sub{font-size:19px;max-width:480px;margin:22px 0 32px}
+.cta{display:flex;gap:12px;flex-wrap:wrap}
+.demo{display:grid;grid-template-columns:.85fr 1fr;gap:20px;align-items:start}
+.rc{position:relative;background:var(--cd);padding:18px 16px 22px;font:12px/1.7 ui-monospace,Menlo,monospace;color:var(--mut);box-shadow:0 24px 50px -24px rgba(20,30,90,.35);transform:rotate(-2deg)}
+.rc::after{content:"";position:absolute;left:0;right:0;bottom:-12px;height:12px;background:linear-gradient(135deg,var(--cd) 25%,transparent 25%) -6px 0,linear-gradient(225deg,var(--cd) 25%,transparent 25%) -6px 0;background-size:12px 12px}
+.rc b{color:var(--fg);font-weight:500;display:block}.rc hr{border:0;border-top:1px dashed var(--bd);margin:8px 0}
+.scn{position:absolute;left:0;right:0;height:2px;background:var(--ac);box-shadow:0 0 14px var(--ac);animation:sc 8s infinite}
+@keyframes sc{0%{top:0;opacity:1}22%{top:100%;opacity:1}24%,100%{top:100%;opacity:0}}
+.xt{background:var(--cd);border:1px solid var(--bd);border-radius:16px;padding:8px 18px 18px}
+.fd{display:flex;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid var(--bd);font-size:14px;animation:fe 8s infinite both;animation-delay:calc(var(--i)*.55s)}
+.fd span{color:var(--mut)}
+@keyframes fe{0%,10%{opacity:0;transform:translateX(-10px)}20%,90%{opacity:1;transform:none}98%,100%{opacity:0}}
+.pb{height:6px;border-radius:3px;background:var(--ams);margin-top:14px;overflow:hidden}.pb b{display:block;height:100%;background:var(--am);animation:pf 8s infinite}
+@keyframes pf{0%,40%{width:0}60%,90%{width:72%}98%,100%{width:0}}
+.pr{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;border-top:1px solid var(--bd);padding-top:28px}
+.pr b{display:block;font:700 18px "Bricolage Grotesque",sans-serif;margin-bottom:6px;color:var(--fg)}
+.sts{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;position:relative;margin-top:48px}
+.sts::before,.sts::after{content:"";position:absolute;left:18px;right:18px;top:18px;height:2px;background:var(--bd)}
+.sts::after{background:var(--ac);transform:scaleX(0);transform-origin:left;transition:transform 2.2s ease .2s}
+.sts.in::after{transform:none}
+.st{position:relative;z-index:1}
+.n{width:38px;height:38px;border-radius:50%;background:var(--bg);border:2px solid var(--bd);display:grid;place-items:center;font:700 14px "Bricolage Grotesque",sans-serif;margin-bottom:18px;transition:.4s}
+.in .n{background:var(--ac);border-color:var(--ac);color:var(--bg);transition-delay:calc(var(--i)*.55s)}
+.st p{font-size:15px}
+.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;margin-top:44px}
+.bn{background:var(--cd);border:1px solid var(--bd);border-radius:20px;padding:28px;overflow:hidden;transition:border-color .3s}
+.bn:hover{border-color:var(--ac)}
+.s4{grid-column:span 4}.s2{grid-column:span 2}.s3{grid-column:span 3}
+.q>*{opacity:0;transform:translateY(8px);transition:.5s;transition-delay:calc(var(--i)*.25s + .3s)}
+.in .q>*{opacity:1;transform:none}
+.ex{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
+.ex div{background:var(--sf);border-radius:10px;padding:10px 14px;font-size:14px}.ex small{display:block;color:var(--mut);font-size:12px}
+.bub{font-size:13px;padding:9px 14px;border-radius:14px;max-width:88%;background:var(--sf);margin-top:8px}.bub.r{margin-left:auto;background:var(--ac);color:var(--bg)}
+.ty{display:inline-flex;gap:4px;padding:11px 14px}.ty i{width:6px;height:6px;border-radius:50%;background:var(--mut);animation:bl 1.2s infinite}.ty i:nth-child(2){animation-delay:.2s}.ty i:nth-child(3){animation-delay:.4s}
+@keyframes bl{0%,100%{opacity:.25}50%{opacity:1}}
+.ln{height:8px;border-radius:4px;background:var(--bd);margin:10px 0;position:relative;overflow:hidden}
+.ln::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,var(--ac),transparent);opacity:.5;animation:sh 2.4s infinite;transform:translateX(-100%)}
+@keyframes sh{to{transform:translateX(100%)}}
+.cs{display:grid;grid-template-columns:1fr 1fr;gap:44px;padding:52px;border-radius:28px;background:#0b1128;color:#eaeefc;border:1px solid var(--bd);position:relative;overflow:hidden}
+.cs p{color:#9aa6d0}
+.bd{display:inline-block;font-size:13px;color:#0b1128;background:#7fe8bf;padding:4px 12px;border-radius:999px;margin-bottom:18px;font-weight:500}
+.ol{list-style:none;margin:28px 0 0;padding:0}
+.oi{display:flex;gap:14px;padding:11px 0;border-top:1px solid rgba(255,255,255,.1);opacity:.45;transition:.4s;font-size:15px}
+.oi.on{opacity:1}.oi b{font:700 13px "Bricolage Grotesque",sans-serif;width:26px;height:26px;flex:none;border-radius:50%;border:1px solid rgba(255,255,255,.3);display:grid;place-items:center}
+.oi.on b{background:#7fe8bf;color:#0b1128;border-color:#7fe8bf}.oi small{display:block;color:#9aa6d0;font-size:13px}
+.vd{background:#141c3b;border-radius:20px;min-height:340px;position:relative;overflow:hidden;align-self:center}
+.sn{position:absolute;inset:0 0 54px;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .5s}
+.vd[data-s="0"] .dv,.vd[data-s="1"] .dv,.vd[data-s="2"] .cn,.vd[data-s="3"] .tk,.vd[data-s="4"] .pg{opacity:1}
+.cr{stroke-dasharray:120}
+.vd[data-s="0"] .cr{animation:dw 1.8s .3s ease-out both}@keyframes dw{from{stroke-dashoffset:120}}
+.rec,.sl,.fb{opacity:0;transition:opacity .4s}
+.vd[data-s="0"] .rec{animation:bl 1s infinite}
+.vd[data-s="1"] .sl{opacity:.9;animation:sv 1.8s ease-in-out infinite}@keyframes sv{50%{transform:translateY(118px)}}
+.vd[data-s="1"] .fb{opacity:1}
+.ln2{display:flex;align-items:center;gap:10px;width:84%}
+.pl{font-size:12px;background:rgba(255,255,255,.08);padding:7px 12px;border-radius:999px;white-space:nowrap}
+.wr{flex:1;height:2px;background:rgba(255,255,255,.2);position:relative}.wr b{position:absolute;top:-3px;left:0;width:8px;height:8px;border-radius:50%;background:#7fe8bf}
+.vd[data-s="2"] .wr b{animation:mv 1.3s ease-in-out infinite}@keyframes mv{to{left:calc(100% - 8px)}}
+.tkc{background:rgba(255,255,255,.08);border-radius:14px;padding:16px 26px;text-align:center}.tkc small{display:block;font-size:12px;color:#9aa6d0}.tkc b{font:700 22px "Bricolage Grotesque",sans-serif;display:block;margin:2px 0 8px}.tkc span{font-size:12px;background:#7fe8bf;color:#0b1128;padding:3px 10px;border-radius:999px}
+.vd[data-s="3"] .tkc{animation:pp .6s ease-out}@keyframes pp{from{opacity:0;transform:scale(.9)}}
+.pgb{width:70%;text-align:center;font-size:13px;color:#9aa6d0}.br2{height:6px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden;margin:12px 0}.br2 b{display:block;height:100%;width:0;background:#7fe8bf}
+.vd[data-s="4"] .br2 b{width:100%;transition:width 2s ease-out}.rs{opacity:0;color:#7fe8bf}.vd[data-s="4"] .rs{opacity:1;transition:opacity .4s 1.9s}
+.sb{position:absolute;left:14px;right:14px;bottom:14px;display:flex;justify-content:space-between;font-size:12px;background:rgba(255,255,255,.07);padding:9px 12px;border-radius:10px;color:#c9d2f5}
+.fin{text-align:center;border:1px solid var(--bd);background:var(--cd);border-radius:28px;padding:72px 24px}
+.fin h2{max-width:560px;margin:0 auto 14px}.fin .bt{margin-top:28px}
+footer{max-width:1120px;margin:0 auto;padding:28px 24px 40px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:14px;color:var(--mut);border-top:1px solid var(--bd)}
+.rv{opacity:0;transform:translateY(20px);transition:opacity .6s ease-out,transform .6s ease-out}.rv.in{opacity:1;transform:none}
+.pg0{padding-top:64px}
+.rh{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}.rh .bt{cursor:pointer}
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:32px}
+.sg div{background:var(--cd);border:1px solid var(--bd);border-radius:14px;padding:16px 20px}.sg b{font:700 28px "Bricolage Grotesque",sans-serif;display:block;line-height:1.2}.sg span{font-size:13px;color:var(--mut)}
+.ctl{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin:28px 0 16px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.cb{font:inherit;font-size:14px;color:var(--mut);background:transparent;border:1px solid var(--bd);border-radius:10px;padding:7px 16px;cursor:pointer;transition:.2s}.cb.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.fi{font:inherit;font-size:15px;color:var(--fg);background:var(--cd);border:1px solid var(--bd);border-radius:10px;padding:10px 14px;width:100%}.so{width:auto;font-size:14px}
+.rl{display:flex;flex-direction:column;gap:10px}
+.rw{display:flex;align-items:center;gap:16px;padding:16px 20px;background:var(--cd);border:1px solid var(--bd);border-radius:14px;flex-wrap:wrap;animation:pop .4s ease-out;transition:border-color .2s}.rw:hover{border-color:var(--ac)}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}}
+.av{width:40px;height:40px;border-radius:10px;background:var(--sf);display:grid;place-items:center;font:700 16px "Bricolage Grotesque",sans-serif;flex:none}
+.rw>div:nth-child(2){flex:1;min-width:150px}.rw b{font-weight:500;display:block}.rw small{color:var(--mut);font-size:13px}
+.tg{display:flex;gap:8px;flex-wrap:wrap}.ch{font-size:12px;padding:5px 11px;border-radius:8px;white-space:nowrap;font-weight:500}
+.ch.a{background:var(--ams);color:var(--am)}.ch.g{background:var(--mns);color:var(--mn)}.ch.x{background:var(--sf);color:var(--mut)}
+.em{text-align:center;padding:40px;color:var(--mut)}.nt{font-size:13px;margin-top:16px}
+.cg{display:grid;grid-template-columns:1.4fr 1fr;gap:20px;margin-top:40px;align-items:start}
+.cf{padding:32px;display:flex;flex-direction:column;gap:16px;background:var(--cd);border:1px solid var(--bd);border-radius:20px}
+.cf label{font-size:13px;color:var(--mut);display:flex;flex-direction:column;gap:6px}textarea.fi{min-height:130px;resize:vertical}.cf .bt{align-self:flex-start}
+.ok{display:none;color:var(--mn);font-size:14px}
+.si{padding:22px 24px;background:var(--cd);border:1px solid var(--bd);border-radius:16px;margin-bottom:16px}.si small{display:block;color:var(--mut);font-size:13px}
+details{border-bottom:1px solid var(--bd);padding:16px 0}summary{cursor:pointer;font-weight:500}details p{margin-top:8px;font-size:15px}
+@media(max-width:860px){.hero,.cs,.cg{grid-template-columns:1fr}.cs{padding:28px}.bento{grid-template-columns:1fr}.s4,.s2,.s3{grid-column:auto}.sts{grid-template-columns:1fr 1fr}.sts::before,.sts::after{display:none}.pr{grid-template-columns:1fr}.sg{grid-template-columns:1fr 1fr}.w{padding:72px 24px}.nv{flex-wrap:wrap}.ls{order:3;width:100%;justify-content:center}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv,.q>*,.fd{opacity:1;transform:none}.sts::after{transform:none}}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"><i></i><i></i></div>
+<nav id="nav"><div class="nv"><a class="lg" href="#top"><i></i>AfterBuy</a>
+<div class="ls"><a href="#top">Home</a><a href="#receipts">My receipts</a><a href="#contact">Contact us</a></div>
+<div class="rt"><button class="ic" id="th" aria-label="Switch light or dark theme">◐</button><a class="bt" href="#receipts">Try now</a></div></div></nav>
+
+<div class="view" data-v="home">
+<header class="w hero" id="top">
+<div><h1>Never lose a receipt or miss a return deadline again</h1>
+<p class="sub">Upload your receipts, let AI organize them, and get reminded before your return or warranty expires.</p>
+<div class="cta"><a class="bt" href="#receipts">Try now</a><a class="bt o" href="#how">See how it works</a></div></div>
+<div class="demo" aria-label="Animated demo: a receipt is read and its details extracted">
+<div class="rc"><div class="scn"></div><b>NORTHWIND ELECTRONICS</b>Invoice INV-88921<br>24 Oct 2026<hr>Laptop 16-inch &nbsp; 1 x<hr>Thank you</div>
+<div class="xt"><div class="fd" style="--i:0"><span>Product</span>Laptop 16-inch</div><div class="fd" style="--i:1"><span>Seller</span>Northwind</div><div class="fd" style="--i:2"><span>Purchased</span>24 Oct 2026</div><div class="fd" style="--i:3"><span>Invoice</span>INV-88921</div>
+<div class="fd" style="--i:4;border:0;padding-bottom:0"><span>Return deadline</span><b style="font-weight:500;color:var(--am)">14 days left</b></div><div class="pb"><b></b></div></div>
+</div>
+</header>
+
+<section class="w" style="padding-block:20px 0"><div class="pr">
+<div><b>Records everywhere</b><p>Paper bills, emails and shopping apps keep your purchases scattered.</p></div>
+<div><b>Deadlines slip by</b><p>Return windows close before anyone remembers to check.</p></div>
+<div><b>Warranties go unused</b><p>Without proof at hand, covered repairs become unnecessary expenses.</p></div></div></section>
+
+<section class="w" id="how">
+<h2>From paper to protected in four steps</h2><p style="max-width:480px">You upload and confirm. AfterBuy handles the rest.</p>
+<div class="sts rv">
+<div class="st" style="--i:0"><div class="n">1</div><h3>Upload</h3><p>Add a photo or PDF of your receipt.</p></div>
+<div class="st" style="--i:1"><div class="n">2</div><h3>AI extracts</h3><p>Product, seller, date and invoice number are read for you.</p></div>
+<div class="st" style="--i:2"><div class="n">3</div><h3>Review</h3><p>Confirm details and add return or warranty dates.</p></div>
+<div class="st" style="--i:3"><div class="n">4</div><h3>Stay covered</h3><p>Get reminders and support help when something goes wrong.</p></div>
+</div></section>
+
+<section class="w" id="features" style="padding-top:20px">
+<h2>Everything after the purchase, in one place</h2>
+<div class="bento">
+<div class="bn s4 rv"><h3>Smart receipt extraction</h3><p>Reads photos, scans and PDFs, then fills in the details so you only confirm.</p>
+<div class="ex q"><div style="--i:0"><small>Product</small>Laptop 16-inch</div><div style="--i:1"><small>Seller</small>Northwind</div><div style="--i:2"><small>Purchased</small>24 Oct 2026</div><div style="--i:3"><small>Invoice</small>INV-88921</div></div></div>
+<div class="bn s2 rv"><h3>Deadline reminders</h3><p>Alerts before your return window or warranty ends.</p>
+<div class="q tg" style="margin-top:20px"><span class="ch a" style="--i:0">Return in 3 days</span><span class="ch g" style="--i:1">Warranty 11 months</span><span class="ch x" style="--i:2">Return closed</span></div></div>
+<div class="bn s3 rv"><h3>Chatbot for your purchases</h3><p>Ask questions and get answers from your saved records.</p>
+<div class="q" style="margin-top:16px"><div class="bub r" style="--i:0">Is my laptop still under warranty?</div><div class="bub" style="--i:1">Yes, 11 months left.</div><div class="bub ty" style="--i:2"><i></i><i></i><i></i></div></div></div>
+<div class="bn s3 rv"><h3>Support email drafts</h3><p>Editable drafts with your invoice details and the issue you describe.</p>
+<div style="margin-top:22px"><div class="ln" style="width:40%"></div><div class="ln"></div><div class="ln" style="width:80%"></div></div></div>
+</div></section>
+
+<section class="w" id="soon" style="padding-top:20px">
+<div class="cs rv"><div><span class="bd">Coming soon</span><h2>Show the problem. We handle the rest.</h2>
+<p>Upload a short video of the issue. AfterBuy contacts customer care, raises a ticket, and follows up until it is solved.</p>
+<ol class="ol" id="ol">
+<li class="oi"><b>1</b><div>Record the problem<small>Upload a video and describe what is wrong.</small></div></li>
+<li class="oi"><b>2</b><div>AI understands the issue<small>Matches it with your invoice and warranty.</small></div></li>
+<li class="oi"><b>3</b><div>Contacts customer care<small>Reaches the brand on your behalf.</small></div></li>
+<li class="oi"><b>4</b><div>Raises a ticket<small>Attaches your proof of purchase.</small></div></li>
+<li class="oi"><b>5</b><div>Follows up until solved<small>Tracks, escalates and keeps you updated.</small></div></li></ol></div>
+<div class="vd" id="vd" data-s="0" aria-label="Animated preview of the video support flow">
+<div class="sn dv"><svg viewBox="0 0 120 140" width="110" height="128" aria-hidden="true"><rect x="10" y="5" width="100" height="130" rx="14" fill="#1d2750" stroke="#6f7db0" stroke-width="1.5"/><path class="cr" d="M60 28 L52 58 L67 78 L56 108" fill="none" stroke="#ffb454" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><rect class="fb" x="36" y="22" width="48" height="94" rx="6" fill="none" stroke="#7fe8bf" stroke-width="1.5" stroke-dasharray="4 3"/><line class="sl" x1="16" x2="104" y1="8" y2="8" stroke="#7fe8bf" stroke-width="2"/><circle class="rec" cx="22" cy="18" r="4" fill="#ff6b6b"/></svg></div>
+<div class="sn cn"><div class="ln2"><span class="pl">AfterBuy</span><i class="wr"><b></b></i><span class="pl">Brand support</span></div></div>
+<div class="sn tk"><div class="tkc"><small>Support ticket</small><b>#AB-1042</b><span>Raised</span></div></div>
+<div class="sn pg"><div class="pgb">Following up with support<div class="br2"><b></b></div><span class="rs">Resolved</span></div></div>
+<div class="sb"><span>Recording the problem</span><span>Video</span></div></div>
+</div></section>
+
+<section class="w" id="start" style="padding-top:20px"><div class="fin rv"><h2>Put your warranties on autopilot.</h2><p>Start organizing your purchases in under a minute.</p><a class="bt" href="#receipts">Try now</a></div></section>
+</div>
+
+<div class="view" data-v="receipts" hidden>
+<section class="w pg0">
+<div class="rh"><div><h2 style="margin:0">My receipts</h2><p>Every purchase, with its return and warranty status.</p></div><label class="bt" for="fu">Upload new receipt</label><input type="file" id="fu" accept="image/*,application/pdf" multiple hidden></div>
+<div class="sg" id="sg"></div>
+<div class="ctl"><div class="chips"><button class="cb on" data-f="all">All</button><button class="cb" data-f="ret">Return open</button><button class="cb" data-f="war">Warranty active</button><button class="cb" data-f="exp">Expired</button></div>
+<select class="fi so" id="so" aria-label="Sort receipts"><option value="exp">Sort: warranty expiring soon</option><option value="new">Sort: newest first</option><option value="name">Sort: name A to Z</option></select></div>
+<div class="rl" id="rl"></div>
+<p class="nt">Preview only: sample receipts are shown, and uploaded files stay in your browser without being processed.</p>
+</section></div>
+
+<div class="view" data-v="contact" hidden>
+<section class="w pg0"><h2>We’re here to help</h2><p>Questions, feedback or a bug to report? Send us a message.</p>
+<div class="cg"><form class="cf" id="cf">
+<label>Name<input class="fi" type="text" required autocomplete="name"></label>
+<label>Email<input class="fi" type="email" required autocomplete="email"></label>
+<label>Subject<select class="fi"><option>Question</option><option>Bug report</option><option>Feedback</option><option>Feature request</option></select></label>
+<label>Message<textarea class="fi" required></textarea></label>
+<button class="bt" type="submit">Send message</button><p class="ok" id="ok">Thanks! This is a preview, so your message was not actually sent.</p></form>
+<div><div class="si"><small>Support email</small>hello@afterbuy.example</div><div class="si"><small>Response time</small>Within 24 hours</div></div></div>
+<div style="margin-top:56px"><h3 style="font-size:22px">Common questions</h3>
+<details><summary>How does AfterBuy read my receipts?</summary><p>AI extracts the product, seller, purchase date and invoice number. You review and confirm everything before it is saved.</p></details>
+<details><summary>Will I be reminded before deadlines expire?</summary><p>Yes. Once a return or warranty date is saved, AfterBuy sends reminders ahead of it.</p></details>
+<details><summary>Can AfterBuy email customer support for me?</summary><p>It drafts the email from your invoice details and your description of the issue. You can edit it before sending.</p></details></div>
+</section></div>
+
+<footer><span>AfterBuy</span><span>Made for post-purchase peace of mind</span></footer>
+
+<script>
+(function(){
+var R=document.documentElement,rm=matchMedia('(prefers-reduced-motion: reduce)').matches,$=function(s){return document.querySelectorAll(s)};
+if(rm||!window.IntersectionObserver)$('.rv').forEach(function(e){e.classList.add('in')});
+else{var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.2});$('.rv').forEach(function(e){io.observe(e)})}
+function E(t,c,x){var n=document.createElement(t);if(c)n.className=c;if(x!=null)n.textContent=x;return n}
+var D=[{n:'Laptop 16-inch',s:'Northwind Electronics',a:12,r:30,w:12},{n:'Wireless headphones',s:'Amazon',a:40,r:10,w:12},{n:'55-inch TV',s:'Croma',a:300,r:7,w:24},{n:'Earbuds',s:'Flipkart',a:350,r:7,w:12},{n:'Air purifier',s:'Dyson store',a:500,r:10,w:12},{n:'Running shoes',s:'Myntra',a:3,r:14,w:0}],fl='all',so='exp',RL=document.getElementById('rl');
+function dl(n){return n===1?'1 day':n+' days'}
+function cl(r){var t=new Date();t.setHours(0,0,0,0);var rl=r.r?r.r-r.a:-1,wl=-1;if(r.w){var d=new Date(t);d.setDate(d.getDate()-r.a);d.setMonth(d.getMonth()+r.w);wl=Math.round((d-t)/864e5)}return{rl:rl,wl:wl,p:new Date(t.getTime()-r.a*864e5)}}
+function rn(){var A=D.map(function(r){return{r:r,c:cl(r)}}),xp=function(o){return!o.r.v&&o.c.rl<0&&o.c.wl<0};
+var sg=document.getElementById('sg');sg.textContent='';[['Total receipts',A.length],['Return open',A.filter(function(o){return o.c.rl>=0}).length],['Warranty active',A.filter(function(o){return o.c.wl>=0}).length],['Expired',A.filter(xp).length]].forEach(function(k){var d=E('div');d.appendChild(E('b',0,k[1]));d.appendChild(E('span',0,k[0]));sg.appendChild(d)});
+var L=A.filter(function(o){return fl==='all'||(fl==='ret'&&o.c.rl>=0)||(fl==='war'&&o.c.wl>=0)||(fl==='exp'&&xp(o))});
+L.sort(function(a,b){if(so==='new')return a.r.a-b.r.a;if(so==='name')return a.r.n.localeCompare(b.r.n);var k=function(o){return o.r.v?-1:(o.c.wl>=0?o.c.wl:99999)};return k(a)-k(b)});
+RL.textContent='';if(!L.length){RL.appendChild(E('div','em','No receipts match this filter.'));return}
+L.forEach(function(o){var r=o.r,c=o.c,w=E('div','rw'),l=E('div'),g=E('div','tg');w.appendChild(E('div','av',r.n[0]));
+l.appendChild(E('b',0,r.n));l.appendChild(E('small',0,r.s+' \u00b7 '+(r.v?'Added just now':'Purchased '+c.p.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}))));
+if(r.v){g.appendChild(E('span','ch a','Please check details'))}else{
+g.appendChild(c.rl>=0?E('span','ch a',c.rl===0?'Return ends today':'Return: '+dl(c.rl)+' left'):E('span','ch x','Return closed'));
+g.appendChild(!r.w?E('span','ch x','No warranty'):c.wl>=0?E('span','ch g','Warranty: '+(c.wl>60?Math.round(c.wl/30)+' months':dl(c.wl))+' left'):E('span','ch x','Warranty ended'))}
+w.appendChild(l);w.appendChild(g);RL.appendChild(w)})}
+function sc(){$('.cb').forEach(function(x){x.classList.toggle('on',x.dataset.f===fl)})}
+$('.cb').forEach(function(b){b.addEventListener('click',function(){fl=b.dataset.f;sc();rn()})});
+document.getElementById('so').addEventListener('change',function(){so=this.value;rn()});
+document.getElementById('fu').addEventListener('change',function(){Array.prototype.forEach.call(this.files,function(f){D.unshift({n:f.name.replace(/\.[^.]+$/,''),s:'New upload',a:0,r:0,w:0,v:1})});this.value='';fl='all';so='new';document.getElementById('so').value='new';sc();rn()});
+rn();
+function route(){var h=location.hash.slice(1),v=(h==='receipts'||h==='contact')?h:'home';
+$('.view').forEach(function(e){e.hidden=e.dataset.v!==v});
+$('.ls a').forEach(function(a){a.classList.toggle('on',a.getAttribute('href')==='#'+(v==='home'?'top':v))});
+var t=v==='home'&&h&&h!=='top'?document.getElementById(h):null;
+if(t)t.scrollIntoView();else if(R.dataset.v!==v||h==='top')window.scrollTo({top:0,behavior:'instant'});
+R.dataset.v=v}
+window.addEventListener('hashchange',route);route();
+document.getElementById('cf').addEventListener('submit',function(e){e.preventDefault();document.getElementById('ok').style.display='block';this.reset()});
+document.getElementById('th').addEventListener('click',function(){var c=R.dataset.theme||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');R.dataset.theme=c==='dark'?'light':'dark'});
+var vd=document.getElementById('vd'),oi=$('.oi'),cs=vd.querySelectorAll('.sb span'),ST=[['Recording the problem','Video'],['AI analyzing the issue','Matching invoice'],['Contacting customer care','In progress'],['Ticket raised','Invoice attached'],['Following up','Tracking']],si=0,sm=null;
+function setS(i){si=i;vd.dataset.s=i;cs[0].textContent=ST[i][0];cs[1].textContent=ST[i][1];oi.forEach(function(e,k){e.classList.toggle('on',k===i)})}
+setS(0);
+if(!rm&&window.IntersectionObserver){new IntersectionObserver(function(es){if(es[0].isIntersecting){if(!sm)sm=setInterval(function(){setS((si+1)%5)},3200)}else{clearInterval(sm);sm=null}},{threshold:.3}).observe(vd)}
+var nav=document.getElementById('nav'),t=false;
+function up(){nav.classList.toggle('sc',window.scrollY>20);t=false}
+window.addEventListener('scroll',function(){if(!t){t=true;requestAnimationFrame(up)}},{passive:true});up();
+})();
+</script>
+</body>
+</html>
