@@ -1,8 +1,10 @@
+import io
 import os
 import requests
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
+import PIL.Image
 
 load_dotenv()
 
@@ -41,9 +43,20 @@ def parse_receipt():
             file = request.files["file"]
             if file.filename == "":
                 return jsonify({"error": "Empty filename."}), 400
+            raw_bytes = file.read()
+            send_name = file.filename
+            send_mime = file.mimetype or "application/octet-stream"
+            if send_mime.startswith("image/"):
+                img = PIL.Image.open(io.BytesIO(raw_bytes)).convert("RGB")
+                img.thumbnail((1024, 1024))
+                buf = io.BytesIO()
+                img.save(buf, format="JPEG", quality=90)
+                raw_bytes = buf.getvalue()
+                send_name = "receipt.jpg"
+                send_mime = "image/jpeg"
             resp = requests.post(
                 f"{KAGGLE_API_URL}/parse-receipt",
-                files={"file": (file.filename, file.stream, file.mimetype or "application/octet-stream")},
+                files={"file": (send_name, io.BytesIO(raw_bytes), send_mime)},
                 headers=NGROK_HEADERS,
                 timeout=90,
             )
