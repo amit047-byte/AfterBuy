@@ -1,70 +1,71 @@
 import os
-import json
-import re
+import requests
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
-import google.generativeai as genai
-import PIL.Image
 
 load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-model = genai.GenerativeModel("gemini-1.5-flash")
-
 RECEIPTS = []
 
-PROMPT = """You are a receipt parser. Extract the following fields from this receipt image and return ONLY valid JSON (no markdown, no explanation):
-{
-  "product": "product name",
-  "seller": "store or seller name",
-  "purchase_date": "YYYY-MM-DD",
-  "invoice_number": "invoice or order number or null",
-  "amount": "total amount as string or null",
-  "return_days": null or number of days for return window,
-  "warranty_months": null or number of months of warranty
-}
-If a field is not found, use null. Do not include any text outside the JSON."""
+
+def get_kaggle_url():
+    return (os.getenv("KAGGLE_API_URL") or "").strip().rstrip("/")
 
 
 @app.route("/", methods=["GET"])
 def home():
-    return jsonify({"status": "AfterBuy backend running", "endpoints": [
-        "POST /parse-receipt  — upload receipt image, get parsed JSON",
-        "GET  /receipts       — list all saved receipts",
-        "POST /receipts       — save a confirmed receipt",
-        "DELETE /receipts/<id> — delete a receipt"
-    ]})
+    kaggle_url = get_kaggle_url()
+    return jsonify({
+        "status": "AfterBuy backend running",
+        "kaggle_connected": bool(kaggle_url),
+        "kaggle_url": kaggle_url or None,
+        "endpoints": [
+            "POST /parse-receipt  — forward receipt image/text to Kaggle Gemma 3",
+            "GET  /receipts       — list all saved receipts",
+            "POST /receipts       — save a confirmed receipt",
+            "DELETE /receipts/<id> — delete a receipt",
+        ],
+    })
 
 
 @app.route("/parse-receipt", methods=["POST"])
 def parse_receipt():
-    if "file" not in request.files:
-        return jsonify({"error": "No file uploaded. Send a file field named 'file'."}), 400
+    kaggle_url = get_kaggle_url()
+    if not kaggle_url:
+        return jsonify({"error": "KAGGLE_API_URL is not set in .env"}), 503
 
-    file = request.files["file"]
-    if file.filename == "":
-        return jsonify({"error": "Empty filename."}), 400
+    headers = {"ngrok-skip-browser-warning": "true"}
+    target = f"{kaggle_url}/parse-receipt"
 
     try:
-        image = PIL.Image.open(file.stream)
-        response = model.generate_content([image, PROMPT])
-        raw = response.text.strip()
+        if "file" in request.files:
+            f = request.files["file"]
+            if not f.filename:
+                return jsonify({"error": "Empty filename."}), 400
+            resp = requests.post(
+                target,
+                files={"file": (f.filename, f.stream, f.mimetype or "application/octet-stream")},
+                headers=headers,
+                timeout=90,
+            )
+        else:
+            resp = requests.post(
+                target,
+                json=request.get_json(silent=True) or {},
+                headers=headers,
+                timeout=90,
+            )
 
-        # Strip markdown code fences if Gemini wraps in ```json ... ```
-        raw = re.sub(r"^```[a-z]*\n?", "", raw)
-        raw = re.sub(r"\n?```$", "", raw)
-
-        data = json.loads(raw)
-        return jsonify({"success": True, "data": data})
-
-    except json.JSONDecodeError:
-        return jsonify({"error": "Could not parse Gemini response as JSON.", "raw": raw}), 500
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        data = resp.json()
+        return jsonify(data), resp.status_code
+    except requests.RequestException as e:
+        return jsonify({"error": f"Failed to reach Kaggle API: {e}"}), 502
+    except ValueError:
+        return jsonify({"error": "Invalid JSON returned from Kaggle API."}), 502
 
 
 @app.route("/receipts", methods=["GET"])
