@@ -127,6 +127,43 @@ footer{max-width:1120px;margin:0 auto;padding:28px 24px 40px;display:flex;justif
 .ok{display:none;color:var(--mn);font-size:14px}
 .si{padding:22px 24px;background:var(--cd);border:1px solid var(--bd);border-radius:16px;margin-bottom:16px}.si small{display:block;color:var(--mut);font-size:13px}
 details{border-bottom:1px solid var(--bd);padding:16px 0}summary{cursor:pointer;font-weight:500}details p{margin-top:8px;font-size:15px}
+dialog:modal{overscroll-behavior:contain}
+dialog::backdrop{overflow:hidden;overscroll-behavior:contain;background:rgba(9,14,29,.48);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.md{margin:auto;padding:0;width:min(860px,calc(100vw - 24px));max-height:calc(100dvh - 24px);border:1px solid var(--bd);border-radius:22px;background:var(--cd);color:var(--fg);box-shadow:0 28px 70px -20px rgba(9,14,29,.45);font:inherit}
+.md-hd{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 24px;border-bottom:1px solid var(--bd)}
+.md-tl{display:flex;align-items:flex-start;gap:10px}
+.md-dot{width:8px;height:8px;border-radius:50%;background:var(--ac);margin-top:7px;flex:none}
+.md-hd h1{font:700 18px/1.2 "Bricolage Grotesque",system-ui,sans-serif;letter-spacing:-.01em;margin:0}
+.md-sub{font:11px/1.4 ui-monospace,Menlo,monospace;color:var(--mut);letter-spacing:.04em;text-transform:uppercase;margin-top:2px}
+.md-hr{display:flex;align-items:center;gap:10px}
+.md-badge{font-size:12px;font-weight:500;padding:5px 12px;border-radius:999px;background:var(--sf);color:var(--ac);border:1px solid var(--bd);white-space:nowrap}
+.md-x{width:34px;height:34px;border-radius:10px;border:1px solid var(--bd);background:transparent;color:var(--mut);cursor:pointer;font-size:16px;display:grid;place-items:center;transition:.2s}
+.md-x:hover{color:var(--fg);background:var(--sf)}
+.md-bd{display:grid;grid-template-columns:1fr 1.2fr;gap:24px;padding:24px}
+.md-col{display:flex;flex-direction:column;gap:14px;min-width:0}
+.md-k{font:500 11px/1.2 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+.md-doc{background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px;flex:1}
+.md-dh{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.md-rc{background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:14px;font:12px/1.65 ui-monospace,Menlo,monospace;color:var(--mut)}
+.md-rc b{color:var(--fg);font-weight:500}
+.md-rr{display:flex;justify-content:space-between;gap:8px}
+.md-rc hr{border:0;border-top:1px dashed var(--bd);margin:10px 0}
+.md-hm{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:600;letter-spacing:.04em;padding:4px 9px;border-radius:6px;background:var(--fg);color:var(--bg)}
+.md-prev{width:100%;max-height:170px;object-fit:contain;border-radius:8px;border:1px solid var(--bd);background:var(--cd);display:none}
+.md-file{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;border-radius:10px;border:1px dashed var(--bd);background:var(--cd);color:var(--fg);font-size:12px;cursor:pointer;transition:border-color .2s}
+.md-file:hover{border-color:var(--ac)}
+.md-file span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.md-file small{color:var(--ac);font-weight:500;flex:none}
+.md-met{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:12px 14px;font:11px/1.6 ui-monospace,Menlo,monospace;color:var(--mut)}
+.md-met .md-rr b{color:var(--fg);font-weight:500}
+.md-fm{display:flex;flex-direction:column;gap:14px}
+.md-fm label{font-size:13px;font-weight:500;color:var(--fg);display:flex;flex-direction:column;gap:6px}
+.md-g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.md-al{display:flex;gap:10px;align-items:flex-start;padding:13px 14px;border-radius:12px;background:var(--ams);color:var(--am);border:1px solid color-mix(in srgb,var(--am) 25%,transparent);font-size:13px;line-height:1.45}
+.md-al b{display:block;margin-bottom:2px;font-size:13px}
+.md-al p{color:var(--am);font-size:12.5px;margin:0}
+.md-ft{display:flex;justify-content:flex-end;gap:10px;margin-top:auto;padding-top:6px}
+@media(max-width:720px){.md-bd{grid-template-columns:1fr}.md-g2{grid-template-columns:1fr}.md-badge{display:none}}
 @media(max-width:860px){.hero,.cs,.cg{grid-template-columns:1fr}.cs{padding:28px}.bento{grid-template-columns:1fr}.s4,.s2,.s3{grid-column:auto}.sts{grid-template-columns:1fr 1fr}.sts::before,.sts::after{display:none}.pr{grid-template-columns:1fr}.sg{grid-template-columns:1fr 1fr}.w{padding:72px 24px}.nv{flex-wrap:wrap}.ls{order:3;width:100%;justify-content:center}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv,.q>*,.fd{opacity:1;transform:none}.sts::after{transform:none}}
 </style>
@@ -198,7 +235,7 @@ details{border-bottom:1px solid var(--bd);padding:16px 0}summary{cursor:pointer;
 
 <div class="view" data-v="receipts" hidden>
 <section class="w pg0">
-<div class="rh"><div><h2 style="margin:0">My receipts</h2><p>Every purchase, with its return and warranty status.</p></div><label class="bt" for="fu">Upload new receipt</label><input type="file" id="fu" accept="image/*,application/pdf" multiple hidden></div>
+<div class="rh"><div><h2 style="margin:0">My receipts</h2><p>Every purchase, with its return and warranty status.</p></div><button type="button" class="bt" id="up-btn">Upload new receipt</button></div>
 <div class="sg" id="sg"></div>
 <div class="ctl"><div class="chips"><button class="cb on" data-f="all">All</button><button class="cb" data-f="ret">Return open</button><button class="cb" data-f="war">Warranty active</button><button class="cb" data-f="exp">Expired</button></div>
 <select class="fi so" id="so" aria-label="Sort receipts"><option value="exp">Sort: warranty expiring soon</option><option value="new">Sort: newest first</option><option value="name">Sort: name A to Z</option></select></div>
@@ -223,6 +260,64 @@ details{border-bottom:1px solid var(--bd);padding:16px 0}summary{cursor:pointer;
 
 <footer><span>AfterBuy</span><span>Made for post-purchase peace of mind</span></footer>
 
+<dialog id="rm" class="md" closedby="any" aria-labelledby="rm-title">
+<form id="rm-f" method="dialog">
+<div class="md-hd">
+<div class="md-tl"><span class="md-dot" aria-hidden="true"></span><div><h1 id="rm-title">Receipt Upload</h1><div class="md-sub">PARSER: OCR_VISION_SYNAPSE_V2</div></div></div>
+<div class="md-hr"><span class="md-badge">AI OCR 99.4% confidence</span><button type="button" class="md-x" id="rm-x" aria-label="Close modal">✕</button></div>
+</div>
+<div class="md-bd">
+<div class="md-col">
+<div class="md-doc">
+<div class="md-dh"><span class="md-k">Source Document</span><span class="md-k" id="rm-meta">PNG · 1.84 MB</span></div>
+<img id="rm-img" class="md-prev" alt="Uploaded receipt preview">
+<div class="md-rc" id="rm-sample">
+<div class="md-rr"><b>NORTHWIND ELECTRONICS</b><span>24 Oct 2026</span></div>
+<hr>
+<div class="md-rr"><span>LAPTOP 16-INCH</span><b>$1,299.00</b></div>
+<div>SKU: NW-LT16-OCT</div>
+<hr>
+<div class="md-rr"><b>TOTAL CHARGED</b><span class="md-hm">HASH MATCHED</span></div>
+</div>
+<label class="md-file" for="fu"><span id="rm-fn">📎 Click to choose receipt (Image or PDF)</span><small>Browse</small></label>
+<input type="file" id="fu" accept="image/*,application/pdf" hidden>
+</div>
+<div class="md-met">
+<div class="md-k" style="margin-bottom:4px">OCR Latency Metrics</div>
+<div class="md-rr"><span>Token Ingestion</span><b>412ms</b></div>
+<div class="md-rr"><span>Bounding Alignment</span><b>180ms</b></div>
+</div>
+</div>
+<div class="md-col">
+<div class="md-k">Calibration Matrix</div>
+<div class="md-fm">
+<label>Product Name<input class="fi" id="rm-prod" type="text" required autofocus placeholder="e.g. Laptop 16-inch"></label>
+<label>Seller / Merchant<input class="fi" id="rm-sell" type="text" required placeholder="e.g. Northwind Electronics"></label>
+<div class="md-g2">
+<label>Purchase Date<input class="fi" id="rm-date" type="date" required></label>
+<label>Invoice #<input class="fi" id="rm-inv" type="text" placeholder="e.g. INV-88921"></label>
+</div>
+<label>Warranty Period (from purchase date)
+<select class="fi" id="rm-war">
+<option value="12">12 Months (1 Year Standard)</option>
+<option value="24">24 Months (2 Years Extended)</option>
+<option value="6">6 Months</option>
+<option value="0">No Warranty</option>
+</select></label>
+<div class="md-al">
+<span aria-hidden="true">⚠</span>
+<div><b>Return Window Notice</b><p id="rm-ret-msg">Return window is set to 14 calendar days from purchase date. Automated return reminder will be scheduled.</p></div>
+</div>
+<div class="md-ft">
+<button type="button" class="bt o" id="rm-c">Cancel</button>
+<button type="submit" class="bt">Confirm &amp; Save Receipt</button>
+</div>
+</div>
+</div>
+</div>
+</form>
+</dialog>
+
 <script>
 (function(){
 var R=document.documentElement,rm=matchMedia('(prefers-reduced-motion: reduce)').matches,$=function(s){return document.querySelectorAll(s)};
@@ -246,7 +341,17 @@ w.appendChild(l);w.appendChild(g);RL.appendChild(w)})}
 function sc(){$('.cb').forEach(function(x){x.classList.toggle('on',x.dataset.f===fl)})}
 $('.cb').forEach(function(b){b.addEventListener('click',function(){fl=b.dataset.f;sc();rn()})});
 document.getElementById('so').addEventListener('change',function(){so=this.value;rn()});
-document.getElementById('fu').addEventListener('change',function(){Array.prototype.forEach.call(this.files,function(f){D.unshift({n:f.name.replace(/\.[^.]+$/,''),s:'New upload',a:0,r:0,w:0,v:1})});this.value='';fl='all';so='new';document.getElementById('so').value='new';sc();rn()});
+var rmd=document.getElementById('rm'),rmf=document.getElementById('rm-f'),rmImg=document.getElementById('rm-img'),rmSamp=document.getElementById('rm-sample'),rmMeta=document.getElementById('rm-meta'),rmFn=document.getElementById('rm-fn'),rmProd=document.getElementById('rm-prod'),rmSell=document.getElementById('rm-sell'),rmDate=document.getElementById('rm-date'),rmInv=document.getElementById('rm-inv'),rmWar=document.getElementById('rm-war'),rmRetMsg=document.getElementById('rm-ret-msg'),objUrl=null;
+function updRet(){var d=rmDate.value?new Date(rmDate.value+'T00:00:00'):new Date();d.setDate(d.getDate()+14);rmRetMsg.textContent='Return window is set to 14 calendar days. Automated return reminder set for '+d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+'.'}
+function rstModal(){if(objUrl){URL.revokeObjectURL(objUrl);objUrl=null}rmImg.style.display='none';rmImg.removeAttribute('src');rmSamp.style.display='block';rmMeta.textContent='PNG · 1.84 MB';rmFn.textContent='📎 Click to choose receipt (Image or PDF)';rmf.reset();var t=new Date();rmDate.value=t.toISOString().slice(0,10);rmWar.value='12';updRet()}
+rmDate.addEventListener('change',updRet);
+document.getElementById('up-btn').addEventListener('click',function(){rstModal();rmd.showModal()});
+document.getElementById('rm-x').addEventListener('click',function(){rmd.close('cancel')});
+document.getElementById('rm-c').addEventListener('click',function(){rmd.close('cancel')});
+rmd.addEventListener('close',function(){rmd.returnValue=''});
+if(!('closedBy' in HTMLDialogElement.prototype)){var out=function(e){var r=rmd.getBoundingClientRect();return e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom},pd=false;rmd.addEventListener('pointerdown',function(e){pd=out(e)});rmd.addEventListener('pointerup',function(e){if(pd&&out(e))rmd.close('dismiss')})}
+document.getElementById('fu').addEventListener('change',function(){var f=this.files&&this.files[0];if(!f)return;var ext=(f.name.split('.').pop()||'FILE').toUpperCase();rmMeta.textContent=ext+' · '+(f.size/1048576).toFixed(2)+' MB';rmFn.textContent='📎 '+f.name;if(!rmProd.value.trim())rmProd.value=f.name.replace(/\.[^.]+$/,'');if(objUrl){URL.revokeObjectURL(objUrl);objUrl=null}if(f.type.indexOf('image/')===0){objUrl=URL.createObjectURL(f);rmImg.src=objUrl;rmImg.style.display='block';rmSamp.style.display='none'}else{rmImg.style.display='none';rmSamp.style.display='block'}this.value=''});
+rmf.addEventListener('submit',function(e){e.preventDefault();var t=new Date();t.setHours(0,0,0,0);var p=rmDate.value?new Date(rmDate.value+'T00:00:00'):new Date(t);var a=Math.max(0,Math.round((t-p)/864e5));D.unshift({n:rmProd.value.trim()||'New Receipt',s:rmSell.value.trim()||'Merchant',a:a,r:14,w:parseInt(rmWar.value,10)||0});fl='all';so='new';document.getElementById('so').value='new';sc();rn();rmd.close('save')});
 rn();
 function route(){var h=location.hash.slice(1),v=(h==='receipts'||h==='contact')?h:'home';
 $('.view').forEach(function(e){e.hidden=e.dataset.v!==v});
