@@ -90,6 +90,7 @@ footer{max-width:1120px;margin:0 auto;padding:24px 24px 40px;display:flex;justif
 @keyframes pop{from{opacity:0;transform:translateY(10px)}}
 .rw>div:first-child{flex:1;min-width:160px}.rw b{font:600 19px Fraunces,serif;display:block;letter-spacing:-.02em}.rw small{color:var(--mut);font-size:13px}
 .tg{display:flex;gap:8px;flex-wrap:wrap}.em{text-align:center;padding:40px;color:var(--mut)}.nt{font-size:13px;margin-top:16px}
+.rdel{background:transparent;border:1px solid var(--bd);color:var(--mut);border-radius:999px;padding:5px 12px;font:500 12px Figtree,sans-serif;cursor:pointer;transition:.2s}.rdel:hover{border-color:var(--ac);color:var(--ac)}
 .cg{display:grid;grid-template-columns:1.4fr 1fr;gap:20px;margin-top:40px;align-items:start}
 .cf{padding:32px;display:flex;flex-direction:column;gap:16px;background:var(--cd);border:1px solid var(--bd);border-radius:24px}.cf label{font-size:13px;color:var(--mut);display:flex;flex-direction:column;gap:6px}textarea.fi{min-height:130px;resize:vertical}.cf .bt{align-self:flex-start}
 .ok{display:none;color:var(--ok);font-size:14px}.si{padding:22px 24px;background:var(--cd);border:1px solid var(--bd);border-radius:18px;margin-bottom:16px}.si small{display:block;color:var(--mut);font-size:13px}
@@ -293,7 +294,7 @@ details{border-bottom:1px solid var(--bd);padding:16px 0}summary{cursor:pointer;
 <dialog class="pdl" id="pdl" aria-labelledby="pdn">
 <div class="pdh"><i class="pdi" id="pdi"></i><div><h3 id="pdn"></h3><p id="pds"></p></div><button class="pdx" id="pdx" type="button" aria-label="Close">×</button></div>
 <div class="pdc" id="pdc"></div><dl class="pdd" id="pdd"></dl>
-<div class="ac"><button class="bt s" id="pdb" type="button">Download receipt</button><button class="bt s o" id="pdp" type="button" hidden></button></div>
+<div class="ac"><button class="bt s" id="pdb" type="button">Download receipt</button><button class="bt s o" id="pdp" type="button" hidden></button><button class="bt s o" id="pddel" type="button">Delete</button></div>
 </dialog>
 
 <script>
@@ -315,6 +316,7 @@ function E(t,c,x){var n=document.createElement(t);if(c)n.className=c;if(x!=null)
 var D=[{n:'Laptop 16-inch',s:'Northwind Electronics',a:12,r:30,w:12,p:149900},{n:'Wireless headphones',s:'Amazon',a:40,r:10,w:12,p:29990},{n:'55-inch TV',s:'Croma',a:300,r:7,w:24,p:54990},{n:'Earbuds',s:'Flipkart',a:350,r:7,w:12,p:1999},{n:'Air purifier',s:'Dyson store',a:500,r:10,w:12,p:32000},{n:'Running shoes',s:'Myntra',a:3,r:14,w:0,p:4999}],fl='all',so='exp',RL=document.getElementById('rl');
 function dl(n){return n===1?'1 day':n+' days'}
 function cl(r){var t=new Date();t.setHours(0,0,0,0);var rl=r.r?r.r-r.a:-1,wl=-1;if(r.w){var d=new Date(t);d.setDate(d.getDate()-r.a);d.setMonth(d.getMonth()+r.w);wl=Math.round((d-t)/864e5)}return{rl:rl,wl:wl,p:new Date(t.getTime()-r.a*864e5)}}
+function delReceipt(r){var idx=D.indexOf(r);if(idx===-1)return;D.splice(idx,1);rn();rd();if(PD.open)PD.close();if(r.driveFileId&&gdToken){fetch('https://www.googleapis.com/drive/v3/files/'+encodeURIComponent(r.driveFileId),{method:'DELETE',headers:{'Authorization':'Bearer '+gdToken}}).catch(function(){})}}
 function rn(){var L=D.map(function(r){return{r:r,c:cl(r)}}).filter(function(o){var x=!o.r.v&&o.c.rl<0&&o.c.wl<0;return fl==='all'||(fl==='ret'&&o.c.rl>=0)||(fl==='war'&&o.c.wl>=0)||(fl==='exp'&&x)});
 L.sort(function(a,b){if(so==='new')return a.r.a-b.r.a;if(so==='name')return a.r.n.localeCompare(b.r.n);var k=function(o){return o.r.v?-1:(o.c.wl>=0?o.c.wl:99999)};return k(a)-k(b)});
 RL.textContent='';if(!L.length){RL.appendChild(E('div','em','No receipts match this filter.'));return}
@@ -323,7 +325,7 @@ l.appendChild(E('b',0,r.n));l.appendChild(E('small',0,r.s+' \u00b7 '+(r.v?'Added
 if(r.v){g.appendChild(E('span','chip a','Please check details'))}else{
 g.appendChild(c.rl>=0?E('span','chip a',c.rl===0?'Return ends today':'Return: '+dl(c.rl)+' left'):E('span','chip x','Return closed'));
 g.appendChild(!r.w?E('span','chip x','No warranty'):c.wl>=0?E('span','chip g','Warranty: '+(c.wl>60?Math.round(c.wl/30)+' months':dl(c.wl))+' left'):E('span','chip x','Warranty ended'))}
-w.appendChild(l);w.appendChild(g);w.appendChild(E('span','rch','\u203a'));w.tabIndex=0;w.setAttribute('role','button');w.setAttribute('aria-label','View details for '+r.n);w.addEventListener('click',function(){op(o)});w.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();op(o)}});RL.appendChild(w)})}
+w.appendChild(l);w.appendChild(g);var del=E('button','rdel','Delete');del.type='button';del.setAttribute('aria-label','Delete '+r.n);del.addEventListener('click',function(e){e.stopPropagation();delReceipt(r)});w.appendChild(del);w.appendChild(E('span','rch','\u203a'));w.tabIndex=0;w.setAttribute('role','button');w.setAttribute('aria-label','View details for '+r.n);w.addEventListener('click',function(){op(o)});w.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();op(o)}});RL.appendChild(w)})}
 function sc(){$('.cb').forEach(function(x){x.classList.toggle('on',x.dataset.f===fl)})}
 $('.cb').forEach(function(b){b.addEventListener('click',function(){fl=b.dataset.f;sc();rn()})});
 document.getElementById('so').addEventListener('change',function(){so=this.value;rn()});
@@ -434,6 +436,7 @@ cs.style.cssText='display:flex;gap:8px;flex-wrap:wrap;margin-top:10px';['It won\
 qa.textContent='';qa.appendChild(b);pend={o:o,k:k};$d('qi').placeholder='Describe what is wrong\u2026';
 setTimeout(function(){card.scrollIntoView({behavior:rm?'auto':'smooth',block:'center'});$d('qi').focus({preventScroll:true})},60)}
 $d('pdp').onclick=function(){var k=PO.c.rl>=0?'r':'w';PD.close();botOpen(PO,k)};
+$d('pddel').onclick=function(){if(PO)delReceipt(PO.r)};
 var nav=document.getElementById('nav'),pin=document.getElementById('pin'),sty=pin.parentNode,chs=$('.ch'),scs=$('.sc2'),dts=$('#dots i'),cur=0,tk=false;
 function up(){nav.classList.toggle('sc',window.scrollY>20);
 if(!sty.offsetParent){tk=false;return}
