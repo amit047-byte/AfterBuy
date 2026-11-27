@@ -133,10 +133,11 @@ def brand_support():
         )
         if r.ok:
             txt = r.text
-            em = re.search(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}", txt)
+            for em in re.findall(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}", txt):
+                if "duckduckgo.com" not in em.lower() and "example.com" not in em.lower():
+                    email = em
+                    break
             ph = re.search(r"(?:1800|1860|0\d{2,4})[\s-]?\d{3,4}[\s-]?\d{3,4}", txt)
-            if em:
-                email = em.group(0)
             if ph:
                 phone = ph.group(0).strip()
     except Exception:
