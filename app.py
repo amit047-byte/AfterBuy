@@ -14,8 +14,6 @@ CORS(app)
 
 KAGGLE_API_URL = (os.getenv("KAGGLE_API_URL") or "").rstrip("/")
 GOOGLE_CLIENT_ID = (os.getenv("GOOGLE_CLIENT_ID") or "").strip()
-RESEND_API_KEY = (os.getenv("RESEND_API_KEY") or "").strip()
-RESEND_FROM = (os.getenv("RESEND_FROM") or "AfterBuy <onboarding@resend.dev>").strip()
 NGROK_HEADERS = {"ngrok-skip-browser-warning": "true"}
 
 RECEIPTS = []
@@ -115,35 +113,6 @@ def chat():
             timeout=90,
         )
         return jsonify(resp.json()), resp.status_code
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-
-@app.route("/send-email", methods=["POST"])
-def send_email():
-    if not RESEND_API_KEY:
-        return jsonify({"error": "RESEND_API_KEY is not configured in .env"}), 500
-    data = request.get_json(silent=True) or {}
-    to_addr = (data.get("to") or "").strip()
-    subject = (data.get("subject") or "").strip()
-    body = (data.get("body") or "").strip()
-    reply_to = (data.get("reply_to") or "").strip()
-    if not to_addr or not subject or not body:
-        return jsonify({"error": "Recipient email, subject, and body are required."}), 400
-    payload = {"from": RESEND_FROM, "to": [to_addr], "subject": subject, "text": body}
-    if reply_to:
-        payload["reply_to"] = reply_to
-    try:
-        resp = requests.post(
-            "https://api.resend.com/emails",
-            headers={"Authorization": f"Bearer {RESEND_API_KEY}", "Content-Type": "application/json"},
-            json=payload,
-            timeout=15,
-        )
-        res_json = resp.json() if resp.content else {}
-        if resp.status_code >= 400:
-            return jsonify({"error": res_json.get("message") or f"Resend error {resp.status_code}"}), resp.status_code
-        return jsonify({"success": True, "id": res_json.get("id")})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
