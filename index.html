@@ -194,6 +194,26 @@ details{border-bottom:1px solid var(--bd);padding:16px 0}summary{cursor:pointer;
 .tst{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:12px 22px;border-radius:999px;font-size:14px;font-weight:500;opacity:0;pointer-events:none;transition:.4s;z-index:60;max-width:calc(100vw - 32px)}
 .tst.on{opacity:1;transform:translate(-50%,0)}
 @media(max-width:760px){.mb{grid-template-columns:1fr}.mdz,.mim{min-height:150px}.m2{grid-template-columns:1fr}.mo{padding:0;align-items:end}.md{border-radius:24px 24px 0 0;max-height:94svh}.mh,.mlf,.mrt{padding-left:20px;padding-right:20px}}
+/* Features section */
+.q>*{opacity:0;transform:translateY(8px);transition:.5s;transition-delay:calc(var(--i)*.25s + .3s)}
+.in .q>*{opacity:1;transform:none}
+.fh{font-size:clamp(32px,4.6vw,60px);line-height:1.04;margin:0;max-width:760px}
+.fgr{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;margin-top:44px}
+.ft{background:var(--cd);border:1px solid var(--bd);border-radius:24px;padding:28px;overflow:hidden;transition:opacity .7s,transform .5s,border-color .3s,box-shadow .35s}
+.ft:hover{transform:translateY(-4px);border-color:var(--ac);box-shadow:0 24px 50px -28px rgba(23,20,43,.35)}
+.ft h3{font-size:22px;margin:0 0 6px}.ft p{font-size:15px}
+.sp4{grid-column:span 4}.sp2{grid-column:span 2}
+.exg{display:grid;grid-template-columns:.9fr 1.1fr;gap:20px;align-items:center;margin-top:22px}
+.ft.in .ln.f{animation:ty 1.4s .6s forwards}
+.pu{width:10px;height:10px;border-radius:50%;background:var(--ac);flex:none;animation:pul 1.6s infinite}
+@keyframes pul{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--ac) 55%,transparent)}70%,100%{box-shadow:0 0 0 12px transparent}}
+.bars{margin-top:20px;display:flex;flex-direction:column;gap:14px}
+.bl{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px}.bl span:last-child{color:var(--mut)}
+.bar{height:6px;border-radius:3px;background:var(--bd);overflow:hidden}
+.bar i{display:block;height:100%;width:0;border-radius:3px;background:var(--ok);transition:width 1.4s cubic-bezier(.2,.8,.2,1) .4s}
+.bar i.a{background:var(--am)}.ft.in .bar i{width:var(--w)}
+@media(max-width:860px){.fgr{grid-template-columns:1fr}.sp4,.sp2{grid-column:auto}.exg{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.q>*{opacity:1;transform:none}.bar i{width:var(--w)}}
 </style>
 </head>
 <body>
@@ -224,6 +244,44 @@ details{border-bottom:1px solid var(--bd);padding:16px 0}summary{cursor:pointer;
 <div class="sc2"><div class="row a" style="--i:0"><span>Subject</span>Warranty claim, INV-88921</div><div class="a" style="--i:1;padding:6px 4px"><div class="ln f" style="--w:90%"></div><div class="ln f" style="--w:75%"></div><div class="ln f" style="--w:84%"></div><div class="ln f" style="--w:50%"></div></div><div class="a" style="--i:2;margin-top:8px"><span class="bt" style="display:block;text-align:center">Edit and send</span></div></div>
 </div>
 <div class="dots" id="dots"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+</div></section>
+
+<section class="w" id="features" style="padding-bottom:20px">
+<h2 class="fh rv">Everything after the purchase, in one place.</h2>
+<p class="rv" style="max-width:520px;margin-top:12px">Upload once. AfterBuy keeps track, reminds you, answers your questions and helps when something goes wrong.</p>
+
+<div class="fgr">
+
+<div class="ft sp4 rv"><h3>Smart receipt extraction</h3><p>Photo, scan or PDF in. Product, seller, date and invoice number out.</p>
+<div class="exg">
+<div class="rc"><div class="scn"></div><b>NORTHWIND ELECTRONICS</b>Invoice INV-88921<hr>Laptop 16-inch &nbsp; 1 x<hr>24 Oct 2026</div>
+<div class="q" style="display:flex;flex-direction:column;gap:8px">
+<div class="row" style="--i:0"><span>Product</span>Laptop 16-inch</div>
+<div class="row" style="--i:1"><span>Seller</span>Northwind</div>
+<div class="row" style="--i:2"><span>Purchased</span>24 Oct 2026</div>
+<div class="row" style="--i:3"><span>Invoice</span>INV-88921</div></div></div></div>
+
+<div class="ft sp2 rv"><h3>Deadline reminders</h3><p>Gentle alerts before a return window or warranty ends.</p>
+<div class="q" style="margin-top:20px;display:flex;flex-direction:column;gap:10px">
+<div class="toast" style="--i:0;display:flex;gap:10px;align-items:center"><i class="pu"></i>Return window closes in 3 days</div>
+<div style="--i:1;display:flex;gap:8px;flex-wrap:wrap"><span class="chip a">Return in 3 days</span><span class="chip g">Warranty 11 months</span></div></div></div>
+
+<div class="ft sp2 rv"><h3>Return and warranty tracking</h3><p>See at a glance what is still covered.</p>
+<div class="bars">
+<div><div class="bl"><span>Laptop</span><span>11 months</span></div><div class="bar"><i style="--w:92%"></i></div></div>
+<div><div class="bl"><span>Headphones</span><span>11 months</span></div><div class="bar"><i style="--w:89%"></i></div></div>
+<div><div class="bl"><span>Earbuds</span><span>15 days</span></div><div class="bar"><i class="a" style="--w:6%"></i></div></div></div></div>
+
+<div class="ft sp2 rv"><h3>Ask your purchases</h3><p>Answers from your own saved receipts.</p>
+<div class="q" style="margin-top:18px">
+<div class="bub r" style="--i:0">Is my laptop still under warranty?</div>
+<div class="bub" style="--i:1;margin-top:8px">Yes, 11 months left.</div>
+<div class="bub" style="--i:2;margin-top:8px"><span class="ty"><i></i><i></i><i></i></span></div></div></div>
+
+<div class="ft sp2 rv"><h3>Support emails, written</h3><p>Editable drafts with your invoice details.</p>
+<div style="margin-top:18px"><div class="row"><span>Subject</span>Warranty claim</div>
+<div style="padding:10px 4px"><div class="ln f" style="--w:92%"></div><div class="ln f" style="--w:78%"></div><div class="ln f" style="--w:85%"></div><div class="ln f" style="--w:50%"></div></div></div></div>
+
 </div></section>
 
 <section class="cs" id="soon"><div class="in">
