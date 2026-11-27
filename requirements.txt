@@ -1,6 +1,5 @@
 flask
 flask-cors
 pillow
-pypdf
 python-dotenv
 requests
