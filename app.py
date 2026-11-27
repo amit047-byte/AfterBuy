@@ -12,9 +12,15 @@ app = Flask(__name__)
 CORS(app)
 
 KAGGLE_API_URL = (os.getenv("KAGGLE_API_URL") or "").rstrip("/")
+GOOGLE_CLIENT_ID = (os.getenv("GOOGLE_CLIENT_ID") or "").strip()
 NGROK_HEADERS = {"ngrok-skip-browser-warning": "true"}
 
 RECEIPTS = []
+
+
+@app.route("/config", methods=["GET"])
+def get_config():
+    return jsonify({"google_client_id": GOOGLE_CLIENT_ID or None})
 
 
 @app.route("/", methods=["GET"])
@@ -130,6 +136,8 @@ def save_receipt():
         "amount": body.get("amount"),
         "return_days": body.get("return_days"),
         "warranty_months": body.get("warranty_months"),
+        "drive_file_id": body.get("drive_file_id"),
+        "drive_file_name": body.get("drive_file_name"),
     }
     RECEIPTS.append(receipt)
     return jsonify({"success": True, "receipt": receipt}), 201
