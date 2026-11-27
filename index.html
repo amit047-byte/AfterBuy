@@ -438,17 +438,19 @@ var $d=function(i){return document.getElementById(i)},fm=function(d){return d.to
 function items(){return D.filter(function(r){return!r.v}).map(function(r){var c=cl(r);return{r:r,c:c,ret:c.rl>=0?c.rl:null,war:c.wl>=0?c.wl:null}})}
 function evs(){var ev=[];items().forEach(function(o){if(o.ret!=null)ev.push({d:o.ret,t:'Return window closes',k:'r',o:o});if(o.war!=null)ev.push({d:o.war,t:'Warranty ends',k:'w',o:o})});return ev.sort(function(a,b){return a.d-b.d})}
 function cnt(el,t){if(rm){el.textContent=inr(t);return}var s=null;function f(ts){s=s||ts;var k=Math.min(1,(ts-s)/1100);el.textContent=inr(t*(1-Math.pow(1-k,3)));if(k<1)requestAnimationFrame(f)}requestAnimationFrame(f)}
-function dr(e,iss){var r=e.o.r,c=e.o.c,r1=e.k==='r',qa=$d('qa'),dp=$d('dp'),edited=false;dp.hidden=true;
-var wrap=E('div','bub'),ttl=E('b',0,'Your email draft'),ds=E('input','fi'),db2=E('textarea','fi'),ac=E('div','ac'),cp=E('button','bt s','Copy email');
+function dr(e,iss,toEmail){var r=e.o.r,c=e.o.c,r1=e.k==='r',qa=$d('qa'),dp=$d('dp'),edited=false;dp.hidden=true;
+var wrap=E('div','bub'),ttl=E('b',0,'Your email draft'),toInp=E('input','fi'),ds=E('input','fi'),db2=E('textarea','fi'),ac=E('div','ac'),cp=E('button','bt s','Copy email'),ml=E('a','bt s o','Open in Mail app');
 wrap.style.maxWidth='100%';ttl.style.display='block';ttl.style.marginBottom='8px';
+toInp.type='email';toInp.setAttribute('aria-label','Support email');toInp.placeholder='Customer care email (e.g. support@brand.com)';toInp.value=toEmail||r.email||'';toInp.style.marginBottom='8px';
 ds.setAttribute('aria-label','Subject');ds.value=(r1?'Return request: ':'Warranty claim: ')+r.n;
 db2.setAttribute('aria-label','Email body');db2.style.minHeight='190px';db2.style.marginTop='8px';
 db2.value='Hello '+r.s+' support team,\n\nI bought '+r.n+' on '+c.p.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})+' (invoice number: '+(r.inv||'[add here]')+').\n\nThe issue: '+(iss||'[describe the problem]')+'\n\nI would like a '+(r1?'[refund / replacement]':'[repair / replacement]')+' under your '+(r1?'return policy':'warranty')+'. Please tell me what you need from me.\n\nThank you,\n[Your name]';
-ds.oninput=db2.oninput=function(){edited=true};
-cp.type='button';cp.onclick=function(){var t=ds.value+'\n\n'+db2.value;try{navigator.clipboard.writeText(t).then(function(){cp.textContent='Copied'},function(){db2.select()})}catch(x){db2.select()}};
-ac.appendChild(cp);wrap.appendChild(ttl);wrap.appendChild(ds);wrap.appendChild(db2);wrap.appendChild(ac);qa.appendChild(wrap);
+function syncMail(){ml.href='mailto:'+encodeURIComponent(toInp.value.trim())+'?subject='+encodeURIComponent(ds.value)+'&body='+encodeURIComponent(db2.value)}
+syncMail();toInp.oninput=ds.oninput=db2.oninput=function(){edited=true;syncMail()};
+cp.type='button';cp.onclick=function(){var t=(toInp.value?'To: '+toInp.value+'\n':'')+ds.value+'\n\n'+db2.value;try{navigator.clipboard.writeText(t).then(function(){cp.textContent='Copied'},function(){db2.select()})}catch(x){db2.select()}};
+ac.appendChild(cp);ac.appendChild(ml);wrap.appendChild(ttl);wrap.appendChild(toInp);wrap.appendChild(ds);wrap.appendChild(db2);wrap.appendChild(ac);qa.appendChild(wrap);
 wrap.scrollIntoView({behavior:rm?'auto':'smooth',block:'nearest'});
-fetch(API_BASE+'/draft-email',{method:'POST',headers:Object.assign({'Content-Type':'application/json'},API_HDR),body:JSON.stringify({receipt:{product:r.n,seller:r.s,invoice_number:r.inv||'N/A',purchase_date:c.p.toISOString().slice(0,10)},issue:iss||'Need assistance with return or warranty'})}).then(function(res){return res.json()}).then(function(res){if(!edited&&res&&res.success&&res.email){var m=res.email.match(/^Subject:\s*(.+)$/im);if(m){ds.value=m[1].trim();db2.value=res.email.replace(/^Subject:.*\n+/i,'').trim()}else db2.value=res.email}}).catch(function(){})}
+fetch(API_BASE+'/draft-email',{method:'POST',headers:Object.assign({'Content-Type':'application/json'},API_HDR),body:JSON.stringify({receipt:{product:r.n,seller:r.s,invoice_number:r.inv||'N/A',purchase_date:c.p.toISOString().slice(0,10)},issue:iss||'Need assistance with return or warranty'})}).then(function(res){return res.json()}).then(function(res){if(!edited&&res&&res.success&&res.email){var m=res.email.match(/^Subject:\s*(.+)$/im);if(m){ds.value=m[1].trim();db2.value=res.email.replace(/^Subject:.*\n+/i,'').trim()}else db2.value=res.email;syncMail()}}).catch(function(){})}
 function rd(){var A=items(),ev=evs(),h=new Date().getHours(),at=ev.filter(function(e){return e.k==='r'?e.d<=14:e.d<=30});
 $d('dt').textContent=new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long'});
 $d('gr').textContent=(h<12?'Good morning.':h<18?'Good afternoon.':'Good evening.')+' '+(at.length?(at.length===1?'One thing needs':at.length+' things need')+' you soon.':'You are all caught up.');
@@ -467,15 +469,29 @@ if(/return/.test(q))return o2.length?o2.map(function(o){return o.r.n+' ('+dl(o.r
 if(/protect|cover|worth|much|value/.test(q))return inr(A.filter(function(o){return o.ret!=null||o.war!=null}).reduce(function(s,o){return s+(o.r.p||0)},0))+' of your purchases are still protected.';
 return 'I can answer from your saved receipts. Try asking about a product or a deadline.'}
 var lc=null;
+function showWarrantyFlow(e,iss,b){var r=e.o.r,c=e.o.c,qa=$d('qa');$d('qi').placeholder='Is my laptop still under warranty?';
+var fbSteps=['Keep your '+r.n+' invoice/receipt'+(r.inv?' ('+r.inv+')':'')+' and serial number ready.','Visit '+r.s+' support / warranty registration portal and register '+r.n+'.','Select Warranty Claim and describe the issue: "'+iss+'".','Upload your proof of purchase to receive a ticket ID and track service.'];
+function renderAssist(steps,phone,email,src){if(phone)r.phone=phone;if(email)r.email=email;b.textContent='';b.style.maxWidth='100%';
+var hd=E('b',0,'How to register & claim warranty for '+r.n);hd.style.display='block';hd.style.marginBottom='8px';b.appendChild(hd);
+var ol=document.createElement('ol');ol.style.cssText='margin:0 0 12px;padding-left:20px;display:flex;flex-direction:column;gap:4px';
+steps.forEach(function(st){ol.appendChild(E('li',0,st))});b.appendChild(ol);
+var info=E('div',0,'Customer care'+(src==='pdf'?' (from uploaded PDF)':src==='web'?' (from web search)':'')+': '+(phone||'Phone not found')+' \u00b7 '+(email||'Email not found'));
+info.style.cssText='font-size:13px;color:var(--mut);margin-bottom:10px';b.appendChild(info);
+var ac=E('div','ac');
+if(phone){var clnk=E('a','bt s o','Call customer care ('+phone+')');clnk.href='tel:'+phone.replace(/[^+\d]/g,'');ac.appendChild(clnk)}
+else{var cbtn=E('button','bt s o','Call customer care');cbtn.type='button';cbtn.onclick=function(){toast('No phone number found automatically for '+r.s)};ac.appendChild(cbtn)}
+var ebtn=E('button','bt s','Send email');ebtn.type='button';ebtn.onclick=function(){dr(e,iss,email||r.email||'')};ac.appendChild(ebtn);
+b.appendChild(ac);b.scrollIntoView({behavior:rm?'auto':'smooth',block:'nearest'})}
+fetch(API_BASE+'/warranty-assist',{method:'POST',headers:Object.assign({'Content-Type':'application/json'},API_HDR),body:JSON.stringify({product:r.n,seller:r.s,issue:iss,purchase_date:c.p.toISOString().slice(0,10),invoice_number:r.inv||null,support_phone:r.phone||null,support_email:r.email||null})}).then(function(res){return res.json()}).then(function(res){if(res&&res.success){renderAssist(res.steps&&res.steps.length?res.steps:fbSteps,res.support_phone,res.support_email,res.source)}else renderAssist(fbSteps,r.phone,r.email,'fallback')}).catch(function(){renderAssist(fbSteps,r.phone,r.email,'fallback')})}
 function ans(q){var l=q.toLowerCase(),A=items(),m=A.filter(function(o){return o.r.n.toLowerCase().split(' ').some(function(w){return w.length>3&&l.indexOf(w)>-1})})[0];
-if(pend){var p=pend,e2={o:p.o,k:p.k};pend=null;lc={e:e2,i:q};$d('qi').placeholder='Is my laptop still under warranty?';return{t:'Thanks. I can draft a '+(p.k==='r'?'return request':'warranty claim')+' to '+p.o.r.s+' support with that issue and your purchase details. Shall I?',d:'Draft the email',f:function(){lc=null;dr(e2,q)}}}
-if(lc&&/draft|email|yes|write|send|go ahead|sure/.test(l)){var c=lc;lc=null;return{t:'Done. Here is your draft—add your invoice number and edit anything you like.',auto:function(){dr(c.e,c.i)}}}
-if(/claim|broke|broken|stopped|not working|doesn|won.?t|defect|fault|damage|crack|repair|replace|issue|problem|dead/.test(l)){
+if(pend){var p=pend,e2={o:p.o,k:p.k};pend=null;lc={e:e2,i:q};return{assist:{e:e2,i:q}}}
+if(lc&&/draft|email|yes|write|send|go ahead|sure/.test(l)){var c=lc;lc=null;return{t:'Done. Here is your draft\u2014add your invoice number and edit anything you like.',auto:function(){dr(c.e,c.i,c.e.o.r.email||'')}}}
+if(/claim|warranty|broke|broken|stopped|not working|doesn|won.?t|defect|fault|damage|crack|repair|replace|issue|problem|dead/.test(l)){
 if(!m)return{t:'Sorry to hear that. Which purchase is it? Mention the product, like the laptop or the earbuds.'};
-var e={o:m,k:m.war!=null?'w':(m.ret!=null?'r':'w')};lc={e:e,i:q};
-return{t:m.war!=null?m.r.n+' is still under warranty ('+lg(m.war)+' left). I can draft a warranty claim email to '+m.r.s+' support with your purchase details.':m.r.n+' is out of warranty, so a free repair is unlikely. I can still draft a note to '+m.r.s+' support to ask about your options.',d:'Draft the email',f:function(){lc=null;dr(e,q)}}}
+var e={o:m,k:m.war!=null?'w':(m.ret!=null?'r':'w')};pend={o:m,k:e.k};
+return{askProblem:m,t:(m.war!=null?m.r.n+' is still under warranty ('+lg(m.war)+' left). ':'')+ 'What exact problem are you facing with '+m.r.n+'?'}}
 return{t:ans0(q)}}
-function ask(q){q=q.trim();if(!q)return;var qa=$d('qa'),b=E('div','bub'),ty=E('span','ty');qa.textContent='';qa.appendChild(E('div','bub r',q));for(var i=0;i<3;i++)ty.appendChild(E('i'));b.appendChild(ty);qa.appendChild(b);var local=ans(q);if(local.d||local.auto||pend||lc){setTimeout(function(){b.textContent=local.t;if(local.d){var k=E('button','bt s',local.d);k.style.marginTop='8px';k.onclick=local.f;b.appendChild(document.createElement('br'));b.appendChild(k)}if(local.auto)local.auto()},rm?0:500);return}fetch(API_BASE+'/chat',{method:'POST',headers:Object.assign({'Content-Type':'application/json'},API_HDR),body:JSON.stringify({message:q,receipts:items().map(function(o){return{product:o.r.n,seller:o.r.s,purchased:o.c.p.toISOString().slice(0,10),return_days_left:o.ret,warranty_days_left:o.war}})})}).then(function(r){return r.json()}).then(function(res){b.textContent=(res&&res.success&&res.reply)?res.reply:local.t}).catch(function(){b.textContent=local.t})}
+function ask(q){q=q.trim();if(!q)return;var qa=$d('qa'),b=E('div','bub'),ty=E('span','ty');qa.textContent='';qa.appendChild(E('div','bub r',q));for(var i=0;i<3;i++)ty.appendChild(E('i'));b.appendChild(ty);qa.appendChild(b);var local=ans(q);if(local.assist){showWarrantyFlow(local.assist.e,local.assist.i,b);return}if(local.askProblem){setTimeout(function(){b.textContent=local.t;var cs=E('div');cs.style.cssText='display:flex;gap:8px;flex-wrap:wrap;margin-top:10px';['It won\u2019t turn on','Stopped working','Battery / charging issue','Physical damage'].forEach(function(pt){var qb=E('button','qb',pt);qb.type='button';qb.onclick=function(){ask(pt)};cs.appendChild(qb)});b.appendChild(cs);$d('qi').placeholder='Describe what is wrong\u2026'},rm?0:450);return}if(local.d||local.auto||pend||lc){setTimeout(function(){b.textContent=local.t;if(local.d){var k=E('button','bt s',local.d);k.style.marginTop='8px';k.onclick=local.f;b.appendChild(document.createElement('br'));b.appendChild(k)}if(local.auto)local.auto()},rm?0:500);return}fetch(API_BASE+'/chat',{method:'POST',headers:Object.assign({'Content-Type':'application/json'},API_HDR),body:JSON.stringify({message:q,receipts:items().map(function(o){return{product:o.r.n,seller:o.r.s,purchased:o.c.p.toISOString().slice(0,10),return_days_left:o.ret,warranty_days_left:o.war}})})}).then(function(r){return r.json()}).then(function(res){b.textContent=(res&&res.success&&res.reply)?res.reply:local.t}).catch(function(){b.textContent=local.t})}
 $d('qf').addEventListener('submit',function(e){e.preventDefault();ask($d('qi').value);$d('qi').value=''});
 $('#qc button').forEach(function(b){b.addEventListener('click',function(){ask(b.textContent)})});
 $d('cx').onclick=function(){$d('dp').hidden=true};
@@ -498,12 +514,12 @@ if(/^image\//.test(f.type)){var fr=new FileReader();fr.onload=function(){var i=d
 else{var s=document.createElement('span');s.className='pdf';s.textContent='PDF';im.appendChild(s)}
 var nm=f.name.replace(/\.[^.]+$/,'').replace(/[-_]+/g,' ').trim();
 if(!$d('mn').value)$d('mn').value=nm;
-mo.file=f;mo.amount=0;
+mo.file=f;mo.amount=0;mo.supportPhone=null;mo.supportEmail=null;
 $d('mw2').hidden=false;$d('mw2').textContent='Extracting details with Kaggle Gemma 3\u2026';
-shrinkImg(f,function(sendFile){var fd=new FormData();fd.append('file',sendFile);fetch(API_BASE+'/parse-receipt',{method:'POST',headers:API_HDR,body:fd}).then(function(r){return r.json()}).then(function(res){if(mo.file!==f)return;if(res&&res.success&&res.data){var d=res.data;if(d.product)$d('mn').value=d.product;if(d.seller)$d('ms').value=d.seller;if(d.purchase_date&&/^\d{4}-\d{2}-\d{2}$/.test(d.purchase_date))$d('md').value=d.purchase_date;if(d.invoice_number)$d('mi').value=d.invoice_number;if(d.warranty_months!=null&&!isNaN(Number(d.warranty_months)))nearOpt($d('mw'),Number(d.warranty_months));if(d.return_days!=null&&!isNaN(Number(d.return_days)))nearOpt($d('mr'),Number(d.return_days));if(d.amount){var num=parseFloat(String(d.amount).replace(/[^0-9.]/g,''));if(!isNaN(num))mo.amount=num}$d('mw2').textContent='Please check each field. Return and warranty periods can differ by seller.';upSum()}else{$d('mw2').textContent='Could not auto-extract ('+(res&&res.error?res.error:'unexpected response')+'). Please check each field.'}}).catch(function(){if(mo.file===f)$d('mw2').textContent='Please check each field. Return and warranty periods can differ by seller.'})})}
+shrinkImg(f,function(sendFile){var fd=new FormData();fd.append('file',sendFile);fetch(API_BASE+'/parse-receipt',{method:'POST',headers:API_HDR,body:fd}).then(function(r){return r.json()}).then(function(res){if(mo.file!==f)return;if(res&&res.success&&res.data){var d=res.data;if(d.product)$d('mn').value=d.product;if(d.seller)$d('ms').value=d.seller;if(d.purchase_date&&/^\d{4}-\d{2}-\d{2}$/.test(d.purchase_date))$d('md').value=d.purchase_date;if(d.invoice_number)$d('mi').value=d.invoice_number;if(d.support_phone)mo.supportPhone=d.support_phone;if(d.support_email)mo.supportEmail=d.support_email;if(d.warranty_months!=null&&!isNaN(Number(d.warranty_months)))nearOpt($d('mw'),Number(d.warranty_months));if(d.return_days!=null&&!isNaN(Number(d.return_days)))nearOpt($d('mr'),Number(d.return_days));if(d.amount){var num=parseFloat(String(d.amount).replace(/[^0-9.]/g,''));if(!isNaN(num))mo.amount=num}$d('mw2').textContent='Please check each field. Return and warranty periods can differ by seller.';upSum()}else{$d('mw2').textContent='Could not auto-extract ('+(res&&res.error?res.error:'unexpected response')+'). Please check each field.'}}).catch(function(){if(mo.file===f)$d('mw2').textContent='Please check each field. Return and warranty periods can differ by seller.'})})}
 function openUp(f){upLast=document.activeElement;$d('mf').reset();$d('md').value=upIso(new Date());
 $d('mdz').hidden=false;$d('mpv').hidden=true;$d('mim').textContent='';$d('mw2').hidden=true;$d('me').textContent='';
-mo.file=null;mo.amount=0;mo.hidden=false;document.body.style.overflow='hidden';upSum();if(f)showUpFile(f);else $d('mn').focus()}
+mo.file=null;mo.amount=0;mo.supportPhone=null;mo.supportEmail=null;mo.hidden=false;document.body.style.overflow='hidden';upSum();if(f)showUpFile(f);else $d('mn').focus()}
 function closeUp(){mo.hidden=true;document.body.style.overflow='';if(upLast&&upLast.focus)upLast.focus()}
 $d('up1').addEventListener('click',function(){openUp()});
 $d('mx').addEventListener('click',closeUp);$d('mc').addEventListener('click',closeUp);
@@ -518,7 +534,7 @@ var n=$d('mn').value.trim(),v=$d('md').value,t=new Date(),d=new Date(v+'T00:00:0
 if(!n){er.textContent='Please enter the product name.';$d('mn').focus();return}
 if(!v||d>t){er.textContent=!v?'Please choose the purchase date.':'The purchase date cannot be in the future.';$d('md').focus();return}
 var sel=$d('ms').value.trim()||'Seller not added',inv=$d('mi').value.trim()||null,w=+$d('mw').value,r=+$d('mr').value,a=Math.max(0,Math.round((t-d)/864e5)),f=mo.file||null,amt=mo.amount||0;
-var item={n:n,s:sel,a:a,r:r,w:w,p:amt,inv:inv,v:0};
+var item={n:n,s:sel,a:a,r:r,w:w,p:amt,inv:inv,phone:mo.supportPhone||null,email:mo.supportEmail||null,v:0};
 D.unshift(item);fl='all';so='new';$d('so').value='new';sc();rn();rd();closeUp();toast('Saved \u201c'+n+'\u201d');
 var meta={product:n,seller:sel,purchase_date:v,invoice_number:inv,return_days:r,warranty_months:w,amount:amt||null};
 if(isLocal){fetch(API_BASE+'/receipts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(meta)}).catch(function(){})}
