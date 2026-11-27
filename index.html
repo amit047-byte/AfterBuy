@@ -109,10 +109,10 @@ details{border-bottom:1px solid var(--bd);padding:16px 0}summary{cursor:pointer;
 .ac{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.bt.s{padding:10px 18px;font-size:14px}
 .dpn{background:var(--cd);border:1px solid var(--bd);margin-top:16px}.dpn h3{margin:0 0 12px;font-size:24px}
 .tln{background:var(--cd);border:1px solid var(--bd)}.tr{margin-left:8px;border-left:2px solid var(--bd);padding-left:26px}
-.tw{position:relative;display:flex;gap:18px;align-items:center;padding:12px 0;animation:pop .6s both}.tw::before{content:"";position:absolute;left:-35px;width:14px;height:14px;border-radius:50%;background:var(--ac);border:3px solid var(--cd)}.tw.g::before{background:var(--ok)}
+.tw{position:relative;display:flex;gap:18px;align-items:center;padding:12px 0;animation:pop .6s both}.tw::before{content:"";position:absolute;left:-34px;top:50%;transform:translateY(-50%);width:14px;height:14px;border-radius:50%;background:var(--ac);border:3px solid var(--cd)}.tw.g::before{background:var(--ok)}
 .tw b{font:600 30px Fraunces,serif;letter-spacing:-.03em;min-width:74px}.tw span{display:block;font-weight:600}.tw small{color:var(--mut);font-size:13px}
 .ai{background:var(--c1)}.qc{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.qf{display:flex;gap:8px;flex-wrap:wrap}.qf .fi{flex:1;min-width:200px}.qa{display:flex;flex-direction:column;gap:8px;margin-top:14px}
-.cl{display:grid;grid-template-columns:1.35fr 1fr;gap:24px;align-items:start}.rhd{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:36px 0 14px}.rhd .dh{margin:0}.cl .ctl{margin:0 0 14px}.tcol{position:sticky;top:calc(88px + env(safe-area-inset-top,0px))}
+.cl{display:grid;grid-template-columns:1.35fr 1fr;gap:24px;align-items:start}.rhd{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:36px 0 14px}.rhd .dh{margin:0}.cl .ctl{margin:0 0 14px}.tcol{position:sticky;top:calc(88px + env(safe-area-inset-top,0px))}.tcol .dh{min-height:40px;display:flex;align-items:center}
 .qb{font:inherit;font-size:14px;font-weight:500;color:var(--ink);background:transparent;border:1.5px solid color-mix(in srgb,var(--ink) 30%,transparent);border-radius:999px;padding:7px 18px;cursor:pointer;transition:.2s}.qb:hover{background:color-mix(in srgb,var(--ink) 10%,transparent)}
 .lgn{display:grid;grid-template-columns:1fr 1fr;min-height:calc(100svh - 70px)}
 .lgf{display:flex;align-items:center;justify-content:center;padding:40px 24px}.lgi{width:100%;max-width:420px;display:flex;flex-direction:column;gap:16px}
@@ -237,7 +237,7 @@ details{border-bottom:1px solid var(--bd);padding:16px 0}summary{cursor:pointer;
 <div class="ctl"><div class="chips"><button class="cb on" data-f="all">All</button><button class="cb" data-f="ret">Return open</button><button class="cb" data-f="war">Warranty active</button><button class="cb" data-f="exp">Expired</button></div>
 <select class="fi so" id="so" aria-label="Sort receipts"><option value="exp">Sort: warranty expiring soon</option><option value="new">Sort: newest first</option><option value="name">Sort: name A to Z</option></select></div>
 <div class="rl" id="rl"></div></div>
-<div class="tcol"><h3 class="dh">What’s coming up</h3><div class="db tln rv"><div class="tr" id="tl"></div></div></div></div>
+<div class="tcol"><h3 class="dh">What’s coming up</h3><div class="db tln"><div class="tr" id="tl"></div></div></div></div>
 <div class="db ai rv" style="margin-top:16px"><h3 style="margin:0 0 4px;font-size:26px">Ask your purchases</h3><p>Answers come from your saved receipts. Tell me if something stops working and I will draft the support email.</p>
 <div class="qc" id="qc"><button class="qb" type="button">What expires first?</button><button class="qb" type="button">Which returns are still open?</button><button class="qb" type="button">How much is protected?</button><button class="qb" type="button">My earbuds stopped working</button></div>
 <form class="qf" id="qf"><input class="fi" id="qi" placeholder="Is my laptop still under warranty?" aria-label="Ask a question"><button class="bt" type="submit">Ask</button></form><div class="qa" id="qa"></div></div>
@@ -345,8 +345,9 @@ cnt($d('cvv'),tot);$d('cvn').textContent='across '+cv.length+' purchases that ar
 var nd=$d('nd');nd.textContent='';
 if(!at.length){var k=E('div','nc a3');k.appendChild(E('h3',0,'All clear'));k.appendChild(E('p',0,'No return window or warranty is ending soon.'));nd.appendChild(k)}
 at.forEach(function(e){var c=E('div','nc '+(e.k==='r'?'a1':'a2')),a=E('div','ac'),y=E('a','bt s o','View receipt');y.href='#receipts';y.addEventListener('click',function(ev){ev.preventDefault();op(e.o)});c.appendChild(E('span','bgn',e.d===0?'Today':dl(e.d)));c.appendChild(E('h3',0,e.o.r.n));c.appendChild(E('p',0,e.t+' on '+dd(e.d)+'. Bought from '+e.o.r.s+'.'));a.appendChild(y);c.appendChild(a);nd.appendChild(c)});
-var tl=$d('tl');tl.textContent='';
-ev.filter(function(e){return e.d<=400}).slice(0,6).forEach(function(e,i){var w=E('div','tw'+(e.k==='w'?' g':'')),s=E('div');w.style.animationDelay=(i*.12)+'s';w.appendChild(E('b',0,e.d<=60?e.d+'d':Math.round(e.d/30)+'mo'));s.appendChild(E('span',0,e.o.r.n));s.appendChild(E('small',0,e.t+' \u00b7 '+dd(e.d)));w.appendChild(s);tl.appendChild(w)})}
+var tl=$d('tl'),upEv=ev.filter(function(e){return e.d<=400}).slice(0,6);tl.textContent='';
+if(!upEv.length){tl.appendChild(E('p',0,'Nothing upcoming right now.'))}
+upEv.forEach(function(e,i){var w=E('div','tw'+(e.k==='w'?' g':'')),s=E('div');w.style.animationDelay=(i*.12)+'s';w.appendChild(E('b',0,e.d<=60?e.d+'d':Math.round(e.d/30)+'mo'));s.appendChild(E('span',0,e.o.r.n));s.appendChild(E('small',0,e.t+' \u00b7 '+dd(e.d)));w.appendChild(s);tl.appendChild(w)})}
 function ans0(q){q=q.toLowerCase();var A=items(),ev=evs(),m=A.filter(function(o){return o.r.n.toLowerCase().split(' ').some(function(w){return w.length>3&&q.indexOf(w)>-1})})[0],o2=A.filter(function(o){return o.ret!=null});
 if(m)return m.r.n+': '+(m.ret!=null?'return window open for '+dl(m.ret)+', ':'return window closed, ')+(m.war!=null?'warranty runs for '+lg(m.war)+'.':'no active warranty.');
 if(/expire|first|soon|next/.test(q)&&ev[0])return ev[0].o.r.n+': '+ev[0].t.toLowerCase()+' in '+dl(ev[0].d)+' ('+dd(ev[0].d)+').';
@@ -397,7 +398,7 @@ function setG(g){var m=$d('amm');m.querySelector('b').textContent=g?'Guest':(gdU
 $d('sk').addEventListener('click',function(){auth=true;setG(true);location.hash='dashboard'});
 $d('acb').addEventListener('click',function(e){e.stopPropagation();var m=$d('amm');m.hidden=!m.hidden;this.setAttribute('aria-expanded',String(!m.hidden))});
 document.addEventListener('click',function(e){if(!e.target.closest('.am'))$d('amm').hidden=true});
-document.querySelector('.lg').addEventListener('click',function(e){if(R.dataset.app){e.preventDefault();location.hash='dashboard'}});
+document.querySelector('.lg').addEventListener('click',function(){if(location.hash==='#top')window.scrollTo({top:0,behavior:'smooth'})});
 var PD=$d('pdl'),PO=null,pend=null;
 function em(n){n=n.toLowerCase();return /laptop|computer/.test(n)?'\ud83d\udcbb':/head|ear|buds/.test(n)?'\ud83c\udfa7':/\btv\b|monitor/.test(n)?'\ud83d\udcfa':/purifier/.test(n)?'\ud83c\udf00':/shoe/.test(n)?'\ud83d\udc5f':'\ud83e\uddfe'}
 function ld(d){return d.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})}
