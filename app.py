@@ -1,6 +1,8 @@
 import io
 import os
 import re
+import smtplib
+from email.message import EmailMessage
 import requests
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -14,6 +16,8 @@ CORS(app)
 
 KAGGLE_API_URL = (os.getenv("KAGGLE_API_URL") or "").rstrip("/")
 GOOGLE_CLIENT_ID = (os.getenv("GOOGLE_CLIENT_ID") or "").strip()
+GMAIL_SENDER = (os.getenv("GMAIL_SENDER") or "amit.productivity047@gmail.com").strip()
+GMAIL_APP_PASSWORD = (os.getenv("GMAIL_APP_PASSWORD") or "").strip().replace(" ", "")
 NGROK_HEADERS = {"ngrok-skip-browser-warning": "true"}
 
 RECEIPTS = []
@@ -113,6 +117,49 @@ def chat():
             timeout=90,
         )
         return jsonify(resp.json()), resp.status_code
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/send-reminders", methods=["POST"])
+def send_reminders():
+    if not GMAIL_APP_PASSWORD:
+        return jsonify({"error": "GMAIL_APP_PASSWORD is not configured in .env"}), 500
+    data = request.get_json(silent=True) or {}
+    to_addr = (data.get("to") or "").strip()
+    alerts = data.get("items") or []
+    if not to_addr or not alerts:
+        return jsonify({"error": "Recipient email and at least one deadline item are required."}), 400
+
+    lines = ["Hi,", "", "Here are your upcoming AfterBuy return and warranty deadlines:", ""]
+    for it in alerts:
+        prod = it.get("product") or "Product"
+        seller = it.get("seller") or "Seller"
+        ret = it.get("return_days_left")
+        war = it.get("warranty_days_left")
+        parts = []
+        if ret is not None and 0 <= ret <= 5:
+            parts.append("Return closes today" if ret == 0 else f"Return closes in {ret} day(s)")
+        if war is not None and 0 <= war <= 30:
+            parts.append("Warranty ends today" if war == 0 else f"Warranty ends in {war} day(s)")
+        if parts:
+            lines.append(f"- {prod} ({seller}): " + " | ".join(parts))
+
+    if len(lines) <= 4:
+        return jsonify({"skipped": True, "reason": "No items within 5-day return or 1-month warranty threshold."})
+
+    lines.extend(["", "Open AfterBuy to review your receipts, claim warranty, or draft a support email.", "", "— AfterBuy"])
+    msg = EmailMessage()
+    msg["From"] = f"AfterBuy <{GMAIL_SENDER}>"
+    msg["To"] = to_addr
+    msg["Subject"] = "AfterBuy Alert: Return or Warranty Deadline Approaching"
+    msg.set_content("\n".join(lines))
+
+    try:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=15) as smtp:
+            smtp.login(GMAIL_SENDER, GMAIL_APP_PASSWORD)
+            smtp.send_message(msg)
+        return jsonify({"success": True, "sent_to": to_addr, "count": len(alerts)})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
