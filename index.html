@@ -169,6 +169,31 @@ details{border-bottom:1px solid var(--bd);padding:16px 0}summary{cursor:pointer;
 .pdh{display:flex;gap:14px;align-items:center}.pdh>div{flex:1;min-width:0}.pdh h3{margin:0;font-size:26px;line-height:1.1}.pdh p{font-size:14px;margin-top:2px}.pdi{width:56px;height:56px;border-radius:16px;background:var(--bg);border:1px solid var(--bd);display:grid;place-items:center;font-size:28px;font-style:normal;flex:none}.pdx{width:36px;height:36px;border-radius:50%;border:1px solid var(--bd);background:transparent;color:var(--ink);font-size:20px;line-height:1;cursor:pointer;align-self:flex-start}
 .pdc{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 6px}.pdd{display:grid;grid-template-columns:minmax(104px,auto) 1fr;margin:8px 0 6px}.pdd dt,.pdd dd{padding:12px 0;border-top:1px solid var(--bd);margin:0}.pdd dt{color:var(--mut);font-size:14px;padding-right:16px}.pdd dd{font-weight:500;font-size:15px}
 .pdl .ac{margin-top:16px}.pdl .bt{flex:1;text-align:center;padding:10px 12px;white-space:nowrap}html:has(dialog[open]){overflow:hidden}
+/* Upload receipt pop-up */
+.mo{position:fixed;inset:0;z-index:50;background:rgba(14,12,30,.5);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:grid;place-items:center;padding:24px;animation:mfd .25s both}
+.mo[hidden],.md [hidden]{display:none!important}
+@keyframes mfd{from{opacity:0}}@keyframes mup{from{opacity:0;transform:translateY(16px) scale(.98)}}@keyframes msc{from{top:0}to{top:100%}}
+.md{width:min(880px,100%);max-height:calc(100svh - 48px);overflow:auto;background:var(--bg);border:1px solid var(--bd);border-radius:28px;box-shadow:0 40px 100px -30px rgba(0,0,0,.5);animation:mup .35s cubic-bezier(.2,.8,.2,1)}
+.mh{display:flex;justify-content:space-between;align-items:center;padding:18px 28px;border-bottom:1px solid var(--bd)}.mh h3{margin:0;font-size:24px}
+.mb{display:grid;grid-template-columns:.9fr 1.1fr}
+.mlf{background:var(--c0);padding:24px 28px;display:flex;flex-direction:column;gap:14px}
+.mrt{padding:24px 28px;display:flex;flex-direction:column;gap:14px}
+.mlf>small,.mrt>small{font-size:13px;font-weight:600;color:var(--mut)}
+.mdz{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:260px;border:2px dashed color-mix(in srgb,var(--ink) 35%,transparent);border-radius:20px;cursor:pointer;text-align:center;padding:16px;transition:.25s}
+.mdz:hover,.mdz.ov{background:color-mix(in srgb,var(--ink) 8%,transparent)}.mdz b{font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.03em;font-size:20px}.mdz span{color:var(--mut);font-size:14px}
+.mpv{display:flex;flex-direction:column;gap:12px}
+.mim{position:relative;background:var(--cd);border-radius:16px;min-height:260px;max-height:340px;overflow:hidden;display:grid;place-items:center}
+.mim img{width:100%;max-height:340px;object-fit:contain;display:block}.mim .pdf{font:600 42px Fraunces,serif;color:var(--mut)}
+.mim.sc::after{content:"";position:absolute;left:0;right:0;height:2px;background:var(--ac);box-shadow:0 0 14px var(--ac);animation:msc 1.2s ease-in-out}
+.mfn{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:14px}.mfn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mrt label{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:500;color:var(--mut)}
+.m2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.mnote{border-radius:14px;padding:12px 14px;font-size:13px;line-height:1.5;color:var(--ink)}
+.mnote.w{background:color-mix(in srgb,var(--am) 16%,transparent)}.mnote.g{background:color-mix(in srgb,var(--ok) 16%,transparent)}
+.mft{display:flex;justify-content:flex-end;gap:10px}
+.tst{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:12px 22px;border-radius:999px;font-size:14px;font-weight:500;opacity:0;pointer-events:none;transition:.4s;z-index:60;max-width:calc(100vw - 32px)}
+.tst.on{opacity:1;transform:translate(-50%,0)}
+@media(max-width:760px){.mb{grid-template-columns:1fr}.mdz,.mim{min-height:150px}.m2{grid-template-columns:1fr}.mo{padding:0;align-items:end}.md{border-radius:24px 24px 0 0;max-height:94svh}.mh,.mlf,.mrt{padding-left:20px;padding-right:20px}}
 </style>
 </head>
 <body>
@@ -234,7 +259,7 @@ details{border-bottom:1px solid var(--bd);padding:16px 0}summary{cursor:pointer;
 <div class="db up rv"><label class="dz" id="dz" for="fu2"><b>Drop a receipt here</b><span>or click to browse</span></label><input type="file" id="fu2" accept="image/*,application/pdf" multiple hidden><p class="um" id="um"></p></div></div>
 <h3 class="dh">Needs you</h3><div class="nd" id="nd"></div>
 <div class="db dpn" id="dp" hidden><h3>Your draft</h3><input class="fi" id="ds" aria-label="Subject"><textarea class="fi" id="db2" aria-label="Email body" style="min-height:230px;margin-top:10px"></textarea><div class="ac"><button class="bt s" id="cp" type="button">Copy email</button><button class="bt s o" id="cx" type="button">Close</button></div></div>
-<div class="cl"><div id="receipts"><div class="rhd"><h3 class="dh">My receipts</h3><label class="bt s" for="fu">Upload new receipt</label><input type="file" id="fu" accept="image/*,application/pdf" multiple hidden></div>
+<div class="cl"><div id="receipts"><div class="rhd"><h3 class="dh">My receipts</h3><button class="bt s" id="up1" type="button">Upload new receipt</button></div>
 <div class="ctl"><div class="chips"><button class="cb on" data-f="all">All</button><button class="cb" data-f="ret">Return open</button><button class="cb" data-f="war">Warranty active</button><button class="cb" data-f="exp">Expired</button></div>
 <select class="fi so" id="so" aria-label="Sort receipts"><option value="exp">Sort: warranty expiring soon</option><option value="new">Sort: newest first</option><option value="name">Sort: name A to Z</option></select></div>
 <div class="rl" id="rl"></div></div>
@@ -297,6 +322,27 @@ details{border-bottom:1px solid var(--bd);padding:16px 0}summary{cursor:pointer;
 <div class="ac"><button class="bt s" id="pdb" type="button">Download receipt</button><button class="bt s o" id="pdp" type="button" hidden></button><button class="bt s o" id="pddel" type="button">Delete</button></div>
 </dialog>
 
+<div class="mo" id="mo" hidden>
+<div class="md" role="dialog" aria-modal="true" aria-labelledby="mt">
+<div class="mh"><h3 id="mt">Add a receipt</h3><button class="ic" id="mx" type="button" aria-label="Close">✕</button></div>
+<form class="mb" id="mf" novalidate>
+<div class="mlf"><small>Your receipt</small>
+<label class="mdz" id="mdz" for="mfi"><b>Drop a receipt here</b><span>or click to browse · PNG, JPG or PDF</span></label>
+<input type="file" id="mfi" accept="image/*,application/pdf" hidden>
+<div class="mpv" id="mpv" hidden><div class="mim" id="mim"></div><div class="mfn"><span id="mfn"></span><button type="button" class="llk" id="mch">Change</button></div></div></div>
+<div class="mrt"><small>Purchase details</small>
+<label>Product name<input class="fi" id="mn" autocomplete="off" placeholder="e.g. Laptop 16-inch"></label>
+<label>Seller<input class="fi" id="ms" autocomplete="off" placeholder="e.g. Northwind Electronics"></label>
+<div class="m2"><label>Purchase date<input class="fi" id="md" type="date"></label><label>Invoice number<input class="fi" id="mi" autocomplete="off" placeholder="Optional"></label></div>
+<div class="m2"><label>Warranty<select class="fi" id="mw"><option value="0">No warranty</option><option value="6">6 months</option><option value="12" selected>1 year</option><option value="24">2 years</option><option value="36">3 years</option></select></label>
+<label>Return window<select class="fi" id="mr"><option value="0">No returns</option><option value="7">7 days</option><option value="10">10 days</option><option value="14" selected>14 days</option><option value="30">30 days</option></select></label></div>
+<div class="mnote w" id="mw2" hidden>Please check each field. Return and warranty periods can differ by seller.</div>
+<div class="mnote g" id="mnt" hidden></div>
+<span class="lerr" id="me" role="alert"></span>
+<div class="mft"><button type="button" class="bt o" id="mc">Cancel</button><button type="submit" class="bt">Confirm and save</button></div>
+</div></form></div></div>
+<div class="tst" id="tst" role="status"></div>
+
 <script>
 (function(){
 var R=document.documentElement,rm=matchMedia('(prefers-reduced-motion: reduce)').matches,$=function(s){return document.querySelectorAll(s)};
@@ -329,7 +375,6 @@ w.appendChild(l);w.appendChild(g);var del=E('button','rdel','Delete');del.type='
 function sc(){$('.cb').forEach(function(x){x.classList.toggle('on',x.dataset.f===fl)})}
 $('.cb').forEach(function(b){b.addEventListener('click',function(){fl=b.dataset.f;sc();rn()})});
 document.getElementById('so').addEventListener('change',function(){so=this.value;rn()});
-document.getElementById('fu').addEventListener('change',function(){if(this.files.length)add(this.files);this.value='';fl='all';so='new';document.getElementById('so').value='new';sc();rn()});
 rn();
 var $d=function(i){return document.getElementById(i)},fm=function(d){return d.toLocaleDateString('en-IN',{day:'numeric',month:'short'})},inr=function(n){return '\u20b9'+Math.round(n).toLocaleString('en-IN')},dd=function(n){var d=new Date();d.setDate(d.getDate()+n);return fm(d)},lg=function(n){return n>60?Math.round(n/30)+' more months':dl(n)};
 function items(){return D.filter(function(r){return!r.v}).map(function(r){var c=cl(r);return{r:r,c:c,ret:c.rl>=0?c.rl:null,war:c.wl>=0?c.wl:null}})}
@@ -377,9 +422,51 @@ $d('qf').addEventListener('submit',function(e){e.preventDefault();ask($d('qi').v
 $('#qc button').forEach(function(b){b.addEventListener('click',function(){ask(b.textContent)})});
 $d('cx').onclick=function(){$d('dp').hidden=true};
 $d('cp').onclick=function(){var t=$d('ds').value+'\n\n'+$d('db2').value;try{navigator.clipboard.writeText(t).then(function(){$d('cp').textContent='Copied'},function(){$d('db2').select()})}catch(x){$d('db2').select()}};
-function add(fs){var m=$d('um');m.textContent='Reading '+fs.length+(fs.length>1?' receipts':' receipt')+' with Kaggle Gemma 3\u2026';Array.prototype.forEach.call(fs,function(f){var item={n:f.name.replace(/\.[^.]+$/,''),s:'Reading with Gemma 3\u2026',a:0,r:14,w:12,p:0,v:1};D.unshift(item);shrinkImg(f,function(sendFile){var fd=new FormData();fd.append('file',sendFile);fetch(API_BASE+'/parse-receipt',{method:'POST',headers:API_HDR,body:fd}).then(function(r){return r.json()}).then(function(res){if(res&&res.success&&res.data){var d=res.data;if(d.product)item.n=d.product;if(d.seller)item.s=d.seller;else item.s='Seller';if(d.purchase_date&&/^\d{4}-\d{2}-\d{2}$/.test(d.purchase_date)){var t=new Date();t.setHours(0,0,0,0);var pd=new Date(d.purchase_date+'T00:00:00');if(!isNaN(pd))item.a=Math.max(0,Math.round((t-pd)/864e5))}if(d.return_days!=null&&!isNaN(Number(d.return_days)))item.r=Number(d.return_days);if(d.warranty_months!=null&&!isNaN(Number(d.warranty_months)))item.w=Number(d.warranty_months);if(d.amount){var num=parseFloat(String(d.amount).replace(/[^0-9.]/g,''));if(!isNaN(num))item.p=num}if(d.invoice_number)item.inv=d.invoice_number;item.v=0;rn();rd();if(gdToken&&gdFolderId){uploadToDrive(f,d).then(function(up){if(up){item.driveFileId=up.id;item.driveFileName=up.name;item.driveMime=up.mimeType}var a=E('a',0,'View in My receipts');a.href='#receipts';m.textContent='Extracted & saved to Google Drive (AfterBuy/'+(up?up.name:item.n)+') \u2014 ';m.appendChild(a)}).catch(function(){var a=E('a',0,'View in My receipts');a.href='#receipts';m.textContent='Extracted: '+item.n+' ('+item.s+') \u2014 ';m.appendChild(a)})}else{var a=E('a',0,'View in My receipts');a.href='#receipts';m.textContent='Extracted: '+item.n+' ('+item.s+') \u2014 ';m.appendChild(a)}if(isLocal){fetch(API_BASE+'/receipts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)}).catch(function(){})}}else{item.s='Manual review needed';rn();if(gdToken&&gdFolderId){uploadToDrive(f,{product:item.n,seller:'Manual review needed'}).then(function(up){if(up){item.driveFileId=up.id;item.driveFileName=up.name}}).catch(function(){})}m.textContent='Could not auto-extract ('+(res&&res.error?res.error:'unexpected response')+').'}}).catch(function(){item.s='Manual review needed';rn();if(gdToken&&gdFolderId){uploadToDrive(f,{product:item.n,seller:'Manual review needed'}).then(function(up){if(up){item.driveFileId=up.id;item.driveFileName=up.name}}).catch(function(){})}m.textContent='Could not reach AfterBuy backend ('+API_BASE+').'})})});rn();rd()}
-$d('fu2').onchange=function(){add(this.files);this.value=''};
-var z=$d('dz');z.addEventListener('dragover',function(e){e.preventDefault();z.classList.add('ov')});z.addEventListener('dragleave',function(){z.classList.remove('ov')});z.addEventListener('drop',function(e){e.preventDefault();z.classList.remove('ov');if(e.dataTransfer.files.length)add(e.dataTransfer.files)});
+var mo=$d('mo'),upLast=null;
+function toast(t){var e=$d('tst');e.textContent=t;e.classList.add('on');setTimeout(function(){e.classList.remove('on')},3200)}
+function upIso(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
+function upFmt(x){return x.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}
+function upSum(){var v=$d('md').value,n=$d('mnt');if(!v){n.hidden=true;return}
+var d=new Date(v+'T00:00:00'),r=+$d('mr').value,w=+$d('mw').value,t=new Date(),p=[];t.setHours(0,0,0,0);
+if(r){var a=new Date(d);a.setDate(a.getDate()+r);p.push('Return window '+(a<t?'ended ':'ends ')+upFmt(a))}
+if(w){var b=new Date(d);b.setMonth(b.getMonth()+w);p.push('Warranty '+(b<t?'ended ':'ends ')+upFmt(b))}
+n.hidden=!p.length;n.textContent=p.length?p.join(' \u00b7 ')+'. We will remind you before each.':''}
+function nearOpt(sel,val){var best=sel.options[0].value,diff=1e9;Array.prototype.forEach.call(sel.options,function(o){var d=Math.abs(Number(o.value)-val);if(d<diff){diff=d;best=o.value}});sel.value=best}
+function showUpFile(f){if(!f)return;
+$d('mdz').hidden=true;$d('mpv').hidden=false;
+$d('mfn').textContent=f.name+' \u00b7 '+(f.size>=1048576?(f.size/1048576).toFixed(1)+' MB':Math.max(1,Math.round(f.size/1024))+' KB');
+var im=$d('mim');im.textContent='';im.classList.add('sc');setTimeout(function(){im.classList.remove('sc')},1300);
+if(/^image\//.test(f.type)){var fr=new FileReader();fr.onload=function(){var i=document.createElement('img');i.alt='Receipt preview';i.src=fr.result;im.appendChild(i)};fr.readAsDataURL(f)}
+else{var s=document.createElement('span');s.className='pdf';s.textContent='PDF';im.appendChild(s)}
+var nm=f.name.replace(/\.[^.]+$/,'').replace(/[-_]+/g,' ').trim();
+if(!$d('mn').value)$d('mn').value=nm;
+mo.file=f;mo.amount=0;
+$d('mw2').hidden=false;$d('mw2').textContent='Extracting details with Kaggle Gemma 3\u2026';
+shrinkImg(f,function(sendFile){var fd=new FormData();fd.append('file',sendFile);fetch(API_BASE+'/parse-receipt',{method:'POST',headers:API_HDR,body:fd}).then(function(r){return r.json()}).then(function(res){if(mo.file!==f)return;if(res&&res.success&&res.data){var d=res.data;if(d.product)$d('mn').value=d.product;if(d.seller)$d('ms').value=d.seller;if(d.purchase_date&&/^\d{4}-\d{2}-\d{2}$/.test(d.purchase_date))$d('md').value=d.purchase_date;if(d.invoice_number)$d('mi').value=d.invoice_number;if(d.warranty_months!=null&&!isNaN(Number(d.warranty_months)))nearOpt($d('mw'),Number(d.warranty_months));if(d.return_days!=null&&!isNaN(Number(d.return_days)))nearOpt($d('mr'),Number(d.return_days));if(d.amount){var num=parseFloat(String(d.amount).replace(/[^0-9.]/g,''));if(!isNaN(num))mo.amount=num}$d('mw2').textContent='Please check each field. Return and warranty periods can differ by seller.';upSum()}else{$d('mw2').textContent='Could not auto-extract ('+(res&&res.error?res.error:'unexpected response')+'). Please check each field.'}}).catch(function(){if(mo.file===f)$d('mw2').textContent='Please check each field. Return and warranty periods can differ by seller.'})})}
+function openUp(f){upLast=document.activeElement;$d('mf').reset();$d('md').value=upIso(new Date());
+$d('mdz').hidden=false;$d('mpv').hidden=true;$d('mim').textContent='';$d('mw2').hidden=true;$d('me').textContent='';
+mo.file=null;mo.amount=0;mo.hidden=false;document.body.style.overflow='hidden';upSum();if(f)showUpFile(f);else $d('mn').focus()}
+function closeUp(){mo.hidden=true;document.body.style.overflow='';if(upLast&&upLast.focus)upLast.focus()}
+$d('up1').addEventListener('click',function(){openUp()});
+$d('mx').addEventListener('click',closeUp);$d('mc').addEventListener('click',closeUp);
+mo.addEventListener('click',function(e){if(e.target===mo)closeUp()});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!mo.hidden)closeUp()});
+$d('mfi').addEventListener('change',function(){showUpFile(this.files[0]);this.value=''});
+$d('mch').addEventListener('click',function(){$d('mfi').click()});
+var mz=$d('mdz');mz.addEventListener('dragover',function(e){e.preventDefault();mz.classList.add('ov')});mz.addEventListener('dragleave',function(){mz.classList.remove('ov')});mz.addEventListener('drop',function(e){e.preventDefault();mz.classList.remove('ov');showUpFile(e.dataTransfer.files[0])});
+['md','mw','mr'].forEach(function(i){$d(i).addEventListener('input',upSum);$d(i).addEventListener('change',upSum)});
+$d('mf').addEventListener('submit',function(e){e.preventDefault();
+var n=$d('mn').value.trim(),v=$d('md').value,t=new Date(),d=new Date(v+'T00:00:00'),er=$d('me');t.setHours(0,0,0,0);er.textContent='';
+if(!n){er.textContent='Please enter the product name.';$d('mn').focus();return}
+if(!v||d>t){er.textContent=!v?'Please choose the purchase date.':'The purchase date cannot be in the future.';$d('md').focus();return}
+var sel=$d('ms').value.trim()||'Seller not added',inv=$d('mi').value.trim()||null,w=+$d('mw').value,r=+$d('mr').value,a=Math.max(0,Math.round((t-d)/864e5)),f=mo.file||null,amt=mo.amount||0;
+var item={n:n,s:sel,a:a,r:r,w:w,p:amt,inv:inv,v:0};
+D.unshift(item);fl='all';so='new';$d('so').value='new';sc();rn();rd();closeUp();toast('Saved \u201c'+n+'\u201d');
+var meta={product:n,seller:sel,purchase_date:v,invoice_number:inv,return_days:r,warranty_months:w,amount:amt||null};
+if(isLocal){fetch(API_BASE+'/receipts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(meta)}).catch(function(){})}
+if(f&&gdToken&&gdFolderId){var um=$d('um');um.textContent='Uploading \u201c'+n+'\u201d to Google Drive\u2026';uploadToDrive(f,meta).then(function(up){if(up){item.driveFileId=up.id;item.driveFileName=up.name;item.driveMime=up.mimeType}var lk=E('a',0,'View in My receipts');lk.href='#receipts';um.textContent='Saved to Google Drive (AfterBuy/'+(up?up.name:n)+') \u2014 ';um.appendChild(lk)}).catch(function(){um.textContent='Saved locally; Google Drive upload failed.'})}});
+$d('fu2').onchange=function(){if(this.files[0])openUp(this.files[0]);this.value=''};
+var z=$d('dz');z.addEventListener('dragover',function(e){e.preventDefault();z.classList.add('ov')});z.addEventListener('dragleave',function(){z.classList.remove('ov')});z.addEventListener('drop',function(e){e.preventDefault();z.classList.remove('ov');if(e.dataTransfer.files[0])openUp(e.dataTransfer.files[0])});
 var auth=false;
 (function(){var F=document.getElementById('lf'),H=document.getElementById('lh'),P=document.getElementById('lp2'),B=document.getElementById('ls'),M=document.getElementById('lm'),IN=['ln','le','lp'].map(function(i){return document.getElementById(i)}),
 TX={in:['Welcome back.','Log in to see your receipts, warranties and deadlines.','Log in'],up:['Start owning your purchases.','Create your free account in under a minute.','Create account'],rs:['Reset your password.','Enter your email and we’ll send you a reset link.','Send reset link']};
